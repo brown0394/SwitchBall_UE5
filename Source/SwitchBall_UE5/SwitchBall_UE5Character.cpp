@@ -9,6 +9,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Kismet/GameplayStatics.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -49,13 +50,14 @@ ASwitchBall_UE5Character::ASwitchBall_UE5Character()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+
+	switchBall = Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, ASwitchBallBase::StaticClass()));
 }
 
 void ASwitchBall_UE5Character::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
-
 	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
@@ -84,6 +86,7 @@ void ASwitchBall_UE5Character::SetupPlayerInputComponent(class UInputComponent* 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASwitchBall_UE5Character::Look);
 
+		EnhancedInputComponent->BindAction(SwitchAction, ETriggerEvent::Completed, this, &ASwitchBall_UE5Character::Switch);
 	}
 
 }
@@ -124,6 +127,23 @@ void ASwitchBall_UE5Character::Look(const FInputActionValue& Value)
 	}
 }
 
+void ASwitchBall_UE5Character::Switch()
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Swtich"));
+	
+	if (switchBall) {
+		switchBall->EnableBall();
+		SetActorLocation(switchBall->GetActorLocation());
+		switchBall->SetActorLocation(FVector(900.0, 1110.0, 92.0));
 
+	}
+	else {
+		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Err"));
+	}
+	
+}
 
-
+void ASwitchBall_UE5Character::SwitchLocation(const FVector& NewLocation)
+{
+	SetActorLocation(NewLocation);
+}

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "SwitchBallBase.h"
 #include "SwitchBall_UE5Character.generated.h"
 
 
@@ -37,6 +38,9 @@ class ASwitchBall_UE5Character : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* SwitchAction;
+
 public:
 	ASwitchBall_UE5Character();
 	
@@ -49,6 +53,9 @@ protected:
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
 			
+	void Switch();
+
+	void SwitchLocation(const FVector& NewLocation);
 
 protected:
 	// APawn interface
@@ -62,5 +69,8 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+
+private:
+	ASwitchBallBase* switchBall;
 };
 
