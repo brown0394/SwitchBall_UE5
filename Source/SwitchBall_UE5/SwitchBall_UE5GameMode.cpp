@@ -12,4 +12,9 @@ ASwitchBall_UE5GameMode::ASwitchBall_UE5GameMode()
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
+
+	static ConstructorHelpers::FClassFinder<APlayerController> PlayerControllerBPClass(TEXT("/Game/ThirdPerson/Blueprints/BP_SwitchBallPlayerController"));
+	if (PlayerControllerBPClass.Class != NULL) {
+		PlayerControllerClass = PlayerControllerBPClass.Class;
+	}
 }

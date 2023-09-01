@@ -18,17 +18,16 @@ ASwitchBallBase::ASwitchBallBase()
 	}
 
 	RootComponent = staticMesh;
+	staticMesh->SetRelativeScale3D(FVector(0.3, 0.3, 0.3));
 
-	SetActorHiddenInGame(true);
-	SetActorTickEnabled(false);
-	SetActorEnableCollision(false);
+	DisableBall();
 }
 
 // Called when the game starts or when spawned
 void ASwitchBallBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	defaultLocation = GetActorLocation();
 }
 
 // Called every frame
@@ -43,4 +42,16 @@ void ASwitchBallBase::EnableBall() {
 	SetActorTickEnabled(true);
 	SetActorEnableCollision(true);
 	staticMesh->SetSimulatePhysics(true);
+}
+
+void ASwitchBallBase::DisableBall() {
+	SetActorHiddenInGame(true);
+	SetActorTickEnabled(false);
+	SetActorEnableCollision(false);
+	staticMesh->SetSimulatePhysics(false);
+}
+
+void ASwitchBallBase::AfterSwitch() {
+	SetActorLocation(defaultLocation);
+	DisableBall();
 }

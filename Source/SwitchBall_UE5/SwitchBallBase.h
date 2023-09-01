@@ -16,8 +16,12 @@ public:
 	ASwitchBallBase();
 	UPROPERTY()
 		UStaticMeshComponent* staticMesh;
+	UPROPERTY(EditAnywhere)
+		FVector defaultLocation;
 
 	void EnableBall();
+	void DisableBall();
+	void AfterSwitch();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

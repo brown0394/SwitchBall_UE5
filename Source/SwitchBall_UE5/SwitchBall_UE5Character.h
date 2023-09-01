@@ -41,6 +41,9 @@ class ASwitchBall_UE5Character : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* SwitchAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* ClickAction;
+
 public:
 	ASwitchBall_UE5Character();
 	
@@ -55,7 +58,9 @@ protected:
 			
 	void Switch();
 
-	void SwitchLocation(const FVector& NewLocation);
+	void ChargeImpulse();
+
+	void LaunchBall();
 
 protected:
 	// APawn interface
@@ -63,6 +68,8 @@ protected:
 	
 	// To add mapping context
 	virtual void BeginPlay();
+
+	virtual void Tick(float DeltaTime) override;
 
 public:
 	/** Returns CameraBoom subobject **/
@@ -72,5 +79,7 @@ public:
 
 private:
 	ASwitchBallBase* switchBall;
+
+	int32 impulseToLaunch;
 };
 

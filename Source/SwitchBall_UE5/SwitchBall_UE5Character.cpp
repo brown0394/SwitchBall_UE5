@@ -51,7 +51,7 @@ ASwitchBall_UE5Character::ASwitchBall_UE5Character()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
-	switchBall = Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, ASwitchBallBase::StaticClass()));
+	impulseToLaunch = 0;
 }
 
 void ASwitchBall_UE5Character::BeginPlay()
@@ -66,6 +66,16 @@ void ASwitchBall_UE5Character::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+	switchBall = Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, ASwitchBallBase::StaticClass()));
+	this->SetActorTickEnabled(false);
+	impulseToLaunch = 0;
+}
+
+void ASwitchBall_UE5Character::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	impulseToLaunch = (impulseToLaunch + 1) % 500;
+	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, FString::Printf(TEXT("%d"), impulseToLaunch));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -87,6 +97,10 @@ void ASwitchBall_UE5Character::SetupPlayerInputComponent(class UInputComponent* 
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASwitchBall_UE5Character::Look);
 
 		EnhancedInputComponent->BindAction(SwitchAction, ETriggerEvent::Completed, this, &ASwitchBall_UE5Character::Switch);
+
+		EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Started, this, &ASwitchBall_UE5Character::ChargeImpulse);
+
+		EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Completed, this, &ASwitchBall_UE5Character::LaunchBall);
 	}
 
 }
@@ -132,10 +146,8 @@ void ASwitchBall_UE5Character::Switch()
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Swtich"));
 	
 	if (switchBall) {
-		switchBall->EnableBall();
 		SetActorLocation(switchBall->GetActorLocation());
-		switchBall->SetActorLocation(FVector(900.0, 1110.0, 92.0));
-
+		switchBall->AfterSwitch();
 	}
 	else {
 		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Err"));
@@ -143,7 +155,14 @@ void ASwitchBall_UE5Character::Switch()
 	
 }
 
-void ASwitchBall_UE5Character::SwitchLocation(const FVector& NewLocation)
+void ASwitchBall_UE5Character::LaunchBall()
 {
-	SetActorLocation(NewLocation);
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Click"));
+	this->SetActorTickEnabled(false);
+	impulseToLaunch = 0;
+}
+
+void ASwitchBall_UE5Character::ChargeImpulse() {
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Charging"));
+	this->SetActorTickEnabled(true);
 }
