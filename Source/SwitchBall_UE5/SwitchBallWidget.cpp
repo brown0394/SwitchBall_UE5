@@ -1,0 +1,17 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "SwitchBallWidget.h"
+#include "Components/ProgressBar.h"
+
+void USwitchBallWidget::SetChargeBar(float &currentCharge, float chargeLimit) {
+	if (ChargeBar) {
+		if (currentCharge < 0.0f) {
+			currentCharge = 0.0f;
+		}
+		else if (currentCharge > chargeLimit) {
+			currentCharge = chargeLimit;
+		}
+		ChargeBar->SetPercent(currentCharge / chargeLimit);
+	}
+}

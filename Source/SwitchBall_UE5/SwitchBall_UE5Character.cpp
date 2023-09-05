@@ -10,7 +10,12 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Kismet/GameplayStatics.h"
+#include "SwitchBallBase.h"
+#include "SwitchBallPlayerController.h"
+#include "SwitchBallWidget.h"
 
+
+#define IMPULSELIMIT 500.0f
 
 //////////////////////////////////////////////////////////////////////////
 // ASwitchBall_UE5Character
@@ -51,7 +56,8 @@ ASwitchBall_UE5Character::ASwitchBall_UE5Character()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
-	impulseToLaunch = 0;
+	impulseToLaunch = 1.0f;
+	shouldChargeIncrease = true;
 }
 
 void ASwitchBall_UE5Character::BeginPlay()
@@ -67,15 +73,26 @@ void ASwitchBall_UE5Character::BeginPlay()
 		}
 	}
 	switchBall = Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, ASwitchBallBase::StaticClass()));
+	switchBallPlayerController = Cast<ASwitchBallPlayerController>(UGameplayStatics::GetActorOfClass(this, ASwitchBallPlayerController::StaticClass()));
 	this->SetActorTickEnabled(false);
-	impulseToLaunch = 0;
+
 }
 
 void ASwitchBall_UE5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	impulseToLaunch = (impulseToLaunch + 1) % 500;
-	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, FString::Printf(TEXT("%d"), impulseToLaunch));
+	if (shouldChargeIncrease) {
+		impulseToLaunch += 5;
+	}
+	else {
+		impulseToLaunch -= 5;
+	}
+	
+	switchBallPlayerController->updateWidget(impulseToLaunch, IMPULSELIMIT);
+
+	if (impulseToLaunch == IMPULSELIMIT ||impulseToLaunch == 0.0f) {
+		shouldChargeIncrease = !shouldChargeIncrease;
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -159,10 +176,12 @@ void ASwitchBall_UE5Character::LaunchBall()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Click"));
 	this->SetActorTickEnabled(false);
-	impulseToLaunch = 0;
+	switchBallPlayerController->setWidgetVisiblilty(false);
+	impulseToLaunch = 1.0f;
+	shouldChargeIncrease = true;
 }
 
 void ASwitchBall_UE5Character::ChargeImpulse() {
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Charging"));
+	switchBallPlayerController->setWidgetVisiblilty(true);
 	this->SetActorTickEnabled(true);
 }

@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
-#include "SwitchBallBase.h"
 #include "SwitchBall_UE5Character.generated.h"
 
 
@@ -78,8 +77,10 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 private:
-	ASwitchBallBase* switchBall;
+	class ASwitchBallBase* switchBall;
+	class ASwitchBallPlayerController* switchBallPlayerController;
 
-	int32 impulseToLaunch;
+	float impulseToLaunch;
+	bool shouldChargeIncrease;
 };
 
