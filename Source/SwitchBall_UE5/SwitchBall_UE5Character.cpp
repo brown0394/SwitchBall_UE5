@@ -13,9 +13,11 @@
 #include "SwitchBallBase.h"
 #include "SwitchBallPlayerController.h"
 #include "SwitchBallWidget.h"
+#include "Components/PrimitiveComponent.h"
 
 
-#define IMPULSELIMIT 500.0f
+#define IMPULSELIMIT 100.0f
+#define IMPULSEMULVAL 150.0f
 
 //////////////////////////////////////////////////////////////////////////
 // ASwitchBall_UE5Character
@@ -52,6 +54,7 @@ ASwitchBall_UE5Character::ASwitchBall_UE5Character()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+	FollowCamera->SetRelativeLocation(FVector(410.0, 0.0, 70.0));
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -82,10 +85,10 @@ void ASwitchBall_UE5Character::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	if (shouldChargeIncrease) {
-		impulseToLaunch += 5;
+		++impulseToLaunch;
 	}
 	else {
-		impulseToLaunch -= 5;
+		--impulseToLaunch;
 	}
 	
 	switchBallPlayerController->updateWidget(impulseToLaunch, IMPULSELIMIT);
@@ -160,28 +163,33 @@ void ASwitchBall_UE5Character::Look(const FInputActionValue& Value)
 
 void ASwitchBall_UE5Character::Switch()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Swtich"));
+	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Swtich"));
 	
-	if (switchBall) {
-		SetActorLocation(switchBall->GetActorLocation());
+	if (!switchBall->GetLaunchAvailabilty()) {
+		SetActorLocation(switchBall->GetActorLocation() + switchBall->GetActorUpVector() * 30);
 		switchBall->AfterSwitch();
 	}
-	else {
-		GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Err"));
-	}
-	
 }
 
 void ASwitchBall_UE5Character::LaunchBall()
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Click"));
-	this->SetActorTickEnabled(false);
-	switchBallPlayerController->setWidgetVisiblilty(false);
-	impulseToLaunch = 1.0f;
-	shouldChargeIncrease = true;
+	if (switchBall->GetLaunchAvailabilty()) {
+		this->SetActorTickEnabled(false);
+		switchBallPlayerController->setWidgetVisiblilty(false);
+
+
+		switchBall->EnableBall();
+		switchBall->SetActorLocation(FollowCamera->K2_GetComponentLocation() + FollowCamera->GetForwardVector() * 20);
+		switchBall->staticMesh->AddImpulse(FollowCamera->GetForwardVector() * impulseToLaunch * IMPULSEMULVAL);
+
+		impulseToLaunch = 1.0f;
+		shouldChargeIncrease = true;
+	}
 }
 
 void ASwitchBall_UE5Character::ChargeImpulse() {
-	switchBallPlayerController->setWidgetVisiblilty(true);
-	this->SetActorTickEnabled(true);
+	if (switchBall->GetLaunchAvailabilty()) {
+		switchBallPlayerController->setWidgetVisiblilty(true);
+		this->SetActorTickEnabled(true);
+	}
 }

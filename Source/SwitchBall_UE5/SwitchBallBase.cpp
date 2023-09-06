@@ -21,6 +21,7 @@ ASwitchBallBase::ASwitchBallBase()
 	staticMesh->SetRelativeScale3D(FVector(0.3, 0.3, 0.3));
 
 	DisableBall();
+	canBeLaunched = true;
 }
 
 // Called when the game starts or when spawned
@@ -42,6 +43,7 @@ void ASwitchBallBase::EnableBall() {
 	SetActorTickEnabled(true);
 	SetActorEnableCollision(true);
 	staticMesh->SetSimulatePhysics(true);
+	canBeLaunched = false;
 }
 
 void ASwitchBallBase::DisableBall() {
@@ -49,9 +51,14 @@ void ASwitchBallBase::DisableBall() {
 	SetActorTickEnabled(false);
 	SetActorEnableCollision(false);
 	staticMesh->SetSimulatePhysics(false);
+	canBeLaunched = true;
 }
 
 void ASwitchBallBase::AfterSwitch() {
 	SetActorLocation(defaultLocation);
 	DisableBall();
+}
+
+bool ASwitchBallBase::GetLaunchAvailabilty() {
+	return canBeLaunched;
 }
