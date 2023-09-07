@@ -43,6 +43,11 @@ class ASwitchBall_UE5Character : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* ClickAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* ChangeToSwitchBallAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* ChangeToStickyBallAction;
+
 public:
 	ASwitchBall_UE5Character();
 	
@@ -61,6 +66,10 @@ protected:
 
 	void LaunchBall();
 
+	void ChangeToSwitchBall();
+
+	void ChangeToStickyBall();
+
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
@@ -77,10 +86,13 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 private:
-	class ASwitchBallBase* switchBall;
+	//class ASwitchBallBase* switchBall;
 	class ASwitchBallPlayerController* switchBallPlayerController;
 
 	float impulseToLaunch;
 	bool shouldChargeIncrease;
+	TArray<class ASwitchBallBase*> switchBalls;
+	int currentBall;
+	bool canLaunchBall;
 };
 

@@ -16,18 +16,22 @@ public:
 	ASwitchBallBase();
 	UPROPERTY()
 		UStaticMeshComponent* staticMesh;
+	UPROPERTY()
+		class USphereComponent* collisionComponent;
+	UPROPERTY()
+		UProjectileMovementComponent* projectileMovementComponent;
 	UPROPERTY(EditAnywhere)
 		FVector defaultLocation;
 
 	void EnableBall();
 	void DisableBall();
 	void AfterSwitch();
-	bool GetLaunchAvailabilty();
+	void FireInDirection(const FVector& ShootDirection);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-private:
-	bool canBeLaunched;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

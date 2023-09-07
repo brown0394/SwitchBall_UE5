@@ -14,6 +14,7 @@
 #include "SwitchBallPlayerController.h"
 #include "SwitchBallWidget.h"
 #include "Components/PrimitiveComponent.h"
+#include "StickyBall.h"
 
 
 #define IMPULSELIMIT 100.0f
@@ -47,7 +48,7 @@ ASwitchBall_UE5Character::ASwitchBall_UE5Character()
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 400.0f; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 0.0f; // The camera follows at this distance behind the character	
 	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 
 	// Create a follow camera
@@ -61,6 +62,8 @@ ASwitchBall_UE5Character::ASwitchBall_UE5Character()
 
 	impulseToLaunch = 1.0f;
 	shouldChargeIncrease = true;
+	currentBall = 0;
+	canLaunchBall = true;
 }
 
 void ASwitchBall_UE5Character::BeginPlay()
@@ -75,7 +78,9 @@ void ASwitchBall_UE5Character::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-	switchBall = Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, ASwitchBallBase::StaticClass()));
+	//switchBall = Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, ASwitchBallBase::StaticClass()));
+	switchBalls.Add(Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, ASwitchBallBase::StaticClass())));
+	switchBalls.Add(Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, AStickyBall::StaticClass())));
 	switchBallPlayerController = Cast<ASwitchBallPlayerController>(UGameplayStatics::GetActorOfClass(this, ASwitchBallPlayerController::StaticClass()));
 	this->SetActorTickEnabled(false);
 
@@ -121,6 +126,10 @@ void ASwitchBall_UE5Character::SetupPlayerInputComponent(class UInputComponent* 
 		EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Started, this, &ASwitchBall_UE5Character::ChargeImpulse);
 
 		EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Completed, this, &ASwitchBall_UE5Character::LaunchBall);
+
+		EnhancedInputComponent->BindAction(ChangeToSwitchBallAction, ETriggerEvent::Completed, this, &ASwitchBall_UE5Character::ChangeToSwitchBall);
+
+		EnhancedInputComponent->BindAction(ChangeToStickyBallAction, ETriggerEvent::Completed, this, &ASwitchBall_UE5Character::ChangeToStickyBall);
 	}
 
 }
@@ -165,31 +174,45 @@ void ASwitchBall_UE5Character::Switch()
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Swtich"));
 	
-	if (!switchBall->GetLaunchAvailabilty()) {
-		SetActorLocation(switchBall->GetActorLocation() + switchBall->GetActorUpVector() * 30);
-		switchBall->AfterSwitch();
+	if (!canLaunchBall) {
+		SetActorLocation(switchBalls[currentBall]->GetActorLocation() + switchBalls[currentBall]->GetActorUpVector() * 30);
+		switchBalls[currentBall]->AfterSwitch();
+		canLaunchBall = true;
 	}
 }
 
 void ASwitchBall_UE5Character::LaunchBall()
 {
-	if (switchBall->GetLaunchAvailabilty()) {
+	if (canLaunchBall) {
 		this->SetActorTickEnabled(false);
 		switchBallPlayerController->setWidgetVisiblilty(false);
 
 
-		switchBall->EnableBall();
-		switchBall->SetActorLocation(FollowCamera->K2_GetComponentLocation() + FollowCamera->GetForwardVector() * 20);
-		switchBall->staticMesh->AddImpulse(FollowCamera->GetForwardVector() * impulseToLaunch * IMPULSEMULVAL);
+		switchBalls[currentBall]->EnableBall();
+		switchBalls[currentBall]->SetActorLocation(FollowCamera->K2_GetComponentLocation() + FollowCamera->GetForwardVector() * 20);
+		switchBalls[currentBall]->staticMesh->AddImpulse(FollowCamera->GetForwardVector() * impulseToLaunch * IMPULSEMULVAL);
 
 		impulseToLaunch = 1.0f;
 		shouldChargeIncrease = true;
+		canLaunchBall = false;
 	}
 }
 
 void ASwitchBall_UE5Character::ChargeImpulse() {
-	if (switchBall->GetLaunchAvailabilty()) {
+	if (canLaunchBall) {
 		switchBallPlayerController->setWidgetVisiblilty(true);
 		this->SetActorTickEnabled(true);
+	}
+}
+
+void ASwitchBall_UE5Character::ChangeToSwitchBall() {
+	if (canLaunchBall) {
+		currentBall = 0;
+	}
+}
+
+void ASwitchBall_UE5Character::ChangeToStickyBall() {
+	if (canLaunchBall) {
+		currentBall = 1;
 	}
 }

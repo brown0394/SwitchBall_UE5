@@ -14,4 +14,19 @@ class SWITCHBALL_UE5_API AStickyBall : public ASwitchBallBase
 {
 	GENERATED_BODY()
 	
+protected:
+	virtual void BeginPlay() override;
+public:
+	UFUNCTION()
+		//void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+    void NotifyHit(
+        UPrimitiveComponent* MyComp,
+        AActor* Other,
+        UPrimitiveComponent* OtherComp,
+        bool bSelfMoved,
+        FVector HitLocation,
+        FVector HitNormal,
+        FVector NormalImpulse,
+        const FHitResult& Hit
+    );
 };
