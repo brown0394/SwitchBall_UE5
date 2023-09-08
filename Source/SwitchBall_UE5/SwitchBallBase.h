@@ -19,14 +19,14 @@ public:
 	UPROPERTY()
 		class USphereComponent* collisionComponent;
 	UPROPERTY()
-		UProjectileMovementComponent* projectileMovementComponent;
+		class UProjectileMovementComponent* projectileMovementComponent;
 	UPROPERTY(EditAnywhere)
 		FVector defaultLocation;
 
 	void EnableBall();
 	void DisableBall();
 	void AfterSwitch();
-	void FireInDirection(const FVector& ShootDirection);
+	void FireInDirection(const FVector& ShootDirection, float impulseCharge);
 
 protected:
 	// Called when the game starts or when spawned

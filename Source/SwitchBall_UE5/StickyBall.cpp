@@ -2,6 +2,8 @@
 
 
 #include "StickyBall.h"
+#include "Components/SphereComponent.h"
+#include "GameFramework/ProjectileMovementComponent.h"
 
 void AStickyBall::BeginPlay()
 {
@@ -26,7 +28,7 @@ void AStickyBall::NotifyHit(
 )
 {
     Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
-    GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("hi2t2"));
-    staticMesh->SetSimulatePhysics(false);
-    
+    projectileMovementComponent->Velocity = FVector(0.0f, 0.0f, 0.0f);
+    projectileMovementComponent->SetUpdatedComponent(collisionComponent);
+    GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("hit"));
 }

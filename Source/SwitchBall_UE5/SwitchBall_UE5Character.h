@@ -81,14 +81,13 @@ protected:
 
 public:
 	/** Returns CameraBoom subobject **/
-	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+	//FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 private:
-	//class ASwitchBallBase* switchBall;
-	class ASwitchBallPlayerController* switchBallPlayerController;
 
+	class ASwitchBallPlayerController* switchBallPlayerController;
 	float impulseToLaunch;
 	bool shouldChargeIncrease;
 	TArray<class ASwitchBallBase*> switchBalls;

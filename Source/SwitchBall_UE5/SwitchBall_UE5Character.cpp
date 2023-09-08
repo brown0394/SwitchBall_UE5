@@ -15,7 +15,7 @@
 #include "SwitchBallWidget.h"
 #include "Components/PrimitiveComponent.h"
 #include "StickyBall.h"
-
+#include "FPSProjectile.h"
 
 #define IMPULSELIMIT 100.0f
 #define IMPULSEMULVAL 150.0f
@@ -46,17 +46,19 @@ ASwitchBall_UE5Character::ASwitchBall_UE5Character()
 	GetCharacterMovement()->BrakingDecelerationWalking = 2000.f;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
-	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 0.0f; // The camera follows at this distance behind the character	
-	CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
-
+	//CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	//CameraBoom->SetupAttachment(RootComponent);
+	//CameraBoom->TargetArmLength = 0.0f; // The camera follows at this distance behind the character	
+	//CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
+	
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
-	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
-	FollowCamera->SetRelativeLocation(FVector(410.0, 0.0, 70.0));
+	FollowCamera->SetupAttachment(CastChecked<USceneComponent, UCapsuleComponent>(GetCapsuleComponent()));//(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->bUsePawnControlRotation = true; // xCamera does not rotate relative to armx  Rotate the arm based on the controller
+	FollowCamera->SetRelativeLocation(FVector(20.0f, 0.0f, BaseEyeHeight));
 
+
+	bUseControllerRotationYaw = true;
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
@@ -78,7 +80,6 @@ void ASwitchBall_UE5Character::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-	//switchBall = Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, ASwitchBallBase::StaticClass()));
 	switchBalls.Add(Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, ASwitchBallBase::StaticClass())));
 	switchBalls.Add(Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, AStickyBall::StaticClass())));
 	switchBallPlayerController = Cast<ASwitchBallPlayerController>(UGameplayStatics::GetActorOfClass(this, ASwitchBallPlayerController::StaticClass()));
@@ -175,7 +176,7 @@ void ASwitchBall_UE5Character::Switch()
 	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Swtich"));
 	
 	if (!canLaunchBall) {
-		SetActorLocation(switchBalls[currentBall]->GetActorLocation() + switchBalls[currentBall]->GetActorUpVector() * 30);
+		SetActorLocation(switchBalls[currentBall]->GetActorLocation() + FVector(0.0f, 0.0f, 50.0f));
 		switchBalls[currentBall]->AfterSwitch();
 		canLaunchBall = true;
 	}
@@ -187,11 +188,9 @@ void ASwitchBall_UE5Character::LaunchBall()
 		this->SetActorTickEnabled(false);
 		switchBallPlayerController->setWidgetVisiblilty(false);
 
-
-		switchBalls[currentBall]->EnableBall();
-		switchBalls[currentBall]->SetActorLocation(FollowCamera->K2_GetComponentLocation() + FollowCamera->GetForwardVector() * 20);
-		switchBalls[currentBall]->staticMesh->AddImpulse(FollowCamera->GetForwardVector() * impulseToLaunch * IMPULSEMULVAL);
-
+		switchBalls[currentBall]->SetActorLocation(FollowCamera->K2_GetComponentLocation() + FollowCamera->GetForwardVector() * 100);
+		//switchBalls[currentBall]->staticMesh->AddImpulse(FollowCamera->GetForwardVector() * impulseToLaunch * IMPULSEMULVAL);
+		switchBalls[currentBall]->FireInDirection(FollowCamera->GetForwardVector(), impulseToLaunch);
 		impulseToLaunch = 1.0f;
 		shouldChargeIncrease = true;
 		canLaunchBall = false;

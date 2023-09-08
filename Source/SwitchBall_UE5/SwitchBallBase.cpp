@@ -19,8 +19,9 @@ ASwitchBallBase::ASwitchBallBase()
 	{
 		// Use a sphere as a simple collision representation.
 		collisionComponent = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+		collisionComponent->BodyInstance.SetCollisionProfileName(TEXT("BlockAll"));
 		// Set the sphere's collision radius.
-		collisionComponent->InitSphereRadius(0.3f);
+		collisionComponent->InitSphereRadius(15.0f);
 		// Set the root component to be the collision component.
 		RootComponent = collisionComponent;
 	}
@@ -28,24 +29,23 @@ ASwitchBallBase::ASwitchBallBase()
 	{
 		// Use this component to drive this projectile's movement.
 		projectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));
-		projectileMovementComponent->SetUpdatedComponent(collisionComponent);
-		projectileMovementComponent->InitialSpeed = 3000.0f;
-		projectileMovementComponent->MaxSpeed = 3000.0f;
+		projectileMovementComponent->InitialSpeed = 150.0f;
+		projectileMovementComponent->MaxSpeed = 1500.0f;
 		projectileMovementComponent->bRotationFollowsVelocity = true;
 		projectileMovementComponent->bShouldBounce = true;
 		projectileMovementComponent->Bounciness = 0.3f;
-		projectileMovementComponent->ProjectileGravityScale = 0.0f;
+		projectileMovementComponent->Velocity = FVector(0.0f, 0.0f, 0.0f);
+		projectileMovementComponent->SetUpdatedComponent(collisionComponent);
 	}
 	staticMesh = CreateDefaultSubobject<UStaticMeshComponent>("StaticMesh");
 	auto MeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
 	if (MeshAsset.Object != nullptr) {
 		staticMesh->SetStaticMesh(MeshAsset.Object);
+		staticMesh->SetupAttachment(collisionComponent);
+		staticMesh->SetRelativeScale3D(FVector(0.3, 0.3, 0.3));
 	}
 
-	RootComponent = staticMesh;
-	staticMesh->SetRelativeScale3D(FVector(0.3, 0.3, 0.3));
-
-	DisableBall();
+	//DisableBall();
 }
 
 // Called when the game starts or when spawned
@@ -63,24 +63,20 @@ void ASwitchBallBase::Tick(float DeltaTime)
 }
 
 void ASwitchBallBase::EnableBall() {
-	SetActorHiddenInGame(false);
-	SetActorTickEnabled(true);
-	SetActorEnableCollision(true);
-	staticMesh->SetSimulatePhysics(true);
+
 }
 
 void ASwitchBallBase::DisableBall() {
-	SetActorHiddenInGame(true);
-	SetActorTickEnabled(false);
-	SetActorEnableCollision(false);
-	staticMesh->SetSimulatePhysics(false);
+	//staticMesh->SetSimulatePhysics(false);
+	//collisionComponent->SetSimulatePhysics(false);
 }
 
 void ASwitchBallBase::AfterSwitch() {
 	SetActorLocation(defaultLocation);
-	DisableBall();
+	//DisableBall();
 }
 
-void ASwitchBallBase::FireInDirection(const FVector& ShootDirection) {
-	projectileMovementComponent->Velocity = ShootDirection * projectileMovementComponent->InitialSpeed;
+void ASwitchBallBase::FireInDirection(const FVector& ShootDirection, float impulseCharge) {
+	projectileMovementComponent->Velocity = ShootDirection * projectileMovementComponent->InitialSpeed * impulseCharge; 
+	projectileMovementComponent->SetUpdatedComponent(collisionComponent);
 }
