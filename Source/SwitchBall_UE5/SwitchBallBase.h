@@ -23,8 +23,8 @@ public:
 	UPROPERTY(EditAnywhere)
 		FVector defaultLocation;
 
-	void EnableBall();
-	void DisableBall();
+	virtual void EnableBall();
+	virtual void DisableBall();
 	void AfterSwitch();
 	void FireInDirection(const FVector& ShootDirection, float impulseCharge);
 
