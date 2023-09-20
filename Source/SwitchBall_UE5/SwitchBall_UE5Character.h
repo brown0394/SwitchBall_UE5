@@ -48,6 +48,9 @@ class ASwitchBall_UE5Character : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 		class UInputAction* ChangeToStickyBallAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+		class UInputAction* ChangeToEyeBallAction;
+
 public:
 	ASwitchBall_UE5Character();
 	
@@ -69,6 +72,8 @@ protected:
 	void ChangeToSwitchBall();
 
 	void ChangeToStickyBall();
+
+	void ChangeToEyeBall();
 
 protected:
 	// APawn interface

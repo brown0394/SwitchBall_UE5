@@ -14,9 +14,19 @@ class SWITCHBALL_UE5_API AEyeBall : public ASwitchBallBase
 {
 	GENERATED_BODY()
 	
-
-public:
-	AEyeBall();
+private:
+	virtual void EnableBall() override;
+	virtual void DisableBall() override;
+	UPROPERTY()
+		class ASwitchBallPlayerController* playerController;
+	UPROPERTY()
+		class ASwitchBall_UE5Character* PlayerCharacter;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
+public:
+	AEyeBall();
+
+protected:
+	virtual void BeginPlay() override;
+
 };

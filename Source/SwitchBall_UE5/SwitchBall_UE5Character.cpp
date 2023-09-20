@@ -15,6 +15,7 @@
 #include "SwitchBallWidget.h"
 #include "Components/PrimitiveComponent.h"
 #include "StickyBall.h"
+#include "EyeBall.h"
 #include "FPSProjectile.h"
 
 #define IMPULSELIMIT 100.0f
@@ -82,6 +83,7 @@ void ASwitchBall_UE5Character::BeginPlay()
 	}
 	switchBalls.Add(Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, ASwitchBallBase::StaticClass())));
 	switchBalls.Add(Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, AStickyBall::StaticClass())));
+	switchBalls.Add(Cast<ASwitchBallBase>(UGameplayStatics::GetActorOfClass(this, AEyeBall::StaticClass())));
 	switchBallPlayerController = Cast<ASwitchBallPlayerController>(UGameplayStatics::GetActorOfClass(this, ASwitchBallPlayerController::StaticClass()));
 	this->SetActorTickEnabled(false);
 
@@ -131,6 +133,8 @@ void ASwitchBall_UE5Character::SetupPlayerInputComponent(class UInputComponent* 
 		EnhancedInputComponent->BindAction(ChangeToSwitchBallAction, ETriggerEvent::Completed, this, &ASwitchBall_UE5Character::ChangeToSwitchBall);
 
 		EnhancedInputComponent->BindAction(ChangeToStickyBallAction, ETriggerEvent::Completed, this, &ASwitchBall_UE5Character::ChangeToStickyBall);
+
+		EnhancedInputComponent->BindAction(ChangeToEyeBallAction, ETriggerEvent::Completed, this, &ASwitchBall_UE5Character::ChangeToEyeBall);
 	}
 
 }
@@ -176,7 +180,9 @@ void ASwitchBall_UE5Character::Switch()
 	//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, TEXT("Swtich"));
 	
 	if (!canLaunchBall) {
-		SetActorLocation(switchBalls[currentBall]->GetActorLocation() + FVector(0.0f, 0.0f, 50.0f));
+		if (currentBall != 2) {
+			SetActorLocation(switchBalls[currentBall]->GetActorLocation() + FVector(0.0f, 0.0f, 50.0f));
+		}
 		switchBalls[currentBall]->AfterSwitch();
 		canLaunchBall = true;
 	}
@@ -213,5 +219,11 @@ void ASwitchBall_UE5Character::ChangeToSwitchBall() {
 void ASwitchBall_UE5Character::ChangeToStickyBall() {
 	if (canLaunchBall) {
 		currentBall = 1;
+	}
+}
+
+void ASwitchBall_UE5Character::ChangeToEyeBall() {
+	if (canLaunchBall) {
+		currentBall = 2;
 	}
 }

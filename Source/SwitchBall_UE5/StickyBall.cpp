@@ -30,5 +30,4 @@ void AStickyBall::NotifyHit(
     Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
     projectileMovementComponent->Velocity = FVector(0.0f, 0.0f, 0.0f);
     projectileMovementComponent->SetUpdatedComponent(collisionComponent);
-    GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("hit"));
 }

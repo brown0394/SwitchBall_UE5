@@ -73,10 +73,11 @@ void ASwitchBallBase::DisableBall() {
 
 void ASwitchBallBase::AfterSwitch() {
 	SetActorLocation(defaultLocation);
-	//DisableBall();
+	DisableBall();
 }
 
 void ASwitchBallBase::FireInDirection(const FVector& ShootDirection, float impulseCharge) {
+	EnableBall();
 	projectileMovementComponent->Velocity = ShootDirection * projectileMovementComponent->InitialSpeed * impulseCharge; 
 	projectileMovementComponent->SetUpdatedComponent(collisionComponent);
 }
