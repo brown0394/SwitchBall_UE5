@@ -24,11 +24,9 @@ void AEyeBall::BeginPlay()
 }
 
 void AEyeBall::DisableBall() {
-	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("disable camera"));
 	playerController->SetViewTargetWithBlend(PlayerCharacter);
 }
 
 void AEyeBall::EnableBall() {
-	GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("enable camera"));
 	playerController->SetViewTargetWithBlend(this);
 }

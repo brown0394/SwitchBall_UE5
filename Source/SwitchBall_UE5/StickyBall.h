@@ -29,4 +29,7 @@ public:
         FVector NormalImpulse,
         const FHitResult& Hit
     );
+    virtual void EnableBall() override;
+    virtual void DisableBall() override;
+
 };

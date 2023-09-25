@@ -30,4 +30,13 @@ void AStickyBall::NotifyHit(
     Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
     projectileMovementComponent->Velocity = FVector(0.0f, 0.0f, 0.0f);
     projectileMovementComponent->SetUpdatedComponent(collisionComponent);
+    AttachToActor(Other, FAttachmentTransformRules::KeepWorldTransform);
+}
+
+void AStickyBall::DisableBall() {
+   DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+}
+
+void AStickyBall::EnableBall() {
+   DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
 }
