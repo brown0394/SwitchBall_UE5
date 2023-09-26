@@ -2,7 +2,6 @@
 
 
 #include "TeleportationTile.h"
-#include "SwitchBallBase.h"
 #include "Kismet/GameplayStatics.h"
 #include "SwitchBall_UE5Character.h"
 
@@ -12,18 +11,19 @@ ATeleportationTile::ATeleportationTile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	staticMesh = CreateDefaultSubobject<UStaticMeshComponent>("TeleTileStaticMesh");
-	auto MeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Engine/BasicShapes/Cube.Cube'"));
+	auto MeshAsset = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("TeleTileStaticMesh'/Engine/BasicShapes/Cube.Cube'"));
 	if (MeshAsset.Object != nullptr) {
 		staticMesh->SetStaticMesh(MeshAsset.Object);
 		staticMesh->SetRelativeScale3D(FVector(0.3, 0.3, 0.3));
 		RootComponent = staticMesh;
-		static ConstructorHelpers::FObjectFinder<UMaterial>Material(TEXT("/Script/Engine.Material'/Game/ThirdPerson/Blueprints/TeleportTile_Material.TeleportTile_Material'"));
+		/*static ConstructorHelpers::FObjectFinder<UMaterial>Material(TEXT("/Script/Engine.Material'/Game/ThirdPerson/Blueprints/TeleportTile_Material.TeleportTile_Material'"));
 		if (Material.Succeeded())
 		{
 			materialInstance = UMaterialInstanceDynamic::Create(Material.Object, staticMesh);
 		}
-		staticMesh->SetMaterial(0, materialInstance);
+		staticMesh->SetMaterial(0, materialInstance);*/
 		staticMesh->SetMobility(EComponentMobility::Static);
+		staticMesh->SetNotifyRigidBodyCollision(true);
 	}
 	
 }

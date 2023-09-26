@@ -32,4 +32,6 @@ public:
     virtual void EnableBall() override;
     virtual void DisableBall() override;
 
+private:
+    bool isAttached;
 };

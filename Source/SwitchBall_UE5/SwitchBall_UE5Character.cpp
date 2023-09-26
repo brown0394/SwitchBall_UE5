@@ -19,7 +19,7 @@
 #include "FPSProjectile.h"
 
 #define IMPULSELIMIT 100.0f
-#define IMPULSEMULVAL 150.0f
+
 
 //////////////////////////////////////////////////////////////////////////
 // ASwitchBall_UE5Character
@@ -194,9 +194,8 @@ void ASwitchBall_UE5Character::LaunchBall()
 		this->SetActorTickEnabled(false);
 		switchBallPlayerController->setWidgetVisiblilty(false);
 
-		switchBalls[currentBall]->SetActorLocation(FollowCamera->K2_GetComponentLocation() + FollowCamera->GetForwardVector() * 100);
 		//switchBalls[currentBall]->staticMesh->AddImpulse(FollowCamera->GetForwardVector() * impulseToLaunch * IMPULSEMULVAL);
-		switchBalls[currentBall]->FireInDirection(FollowCamera->GetForwardVector(), impulseToLaunch);
+		switchBalls[currentBall]->FireInDirection(FollowCamera->K2_GetComponentLocation() + FollowCamera->GetForwardVector() * 100, FollowCamera->GetForwardVector(), impulseToLaunch);
 		impulseToLaunch = 1.0f;
 		shouldChargeIncrease = true;
 		canLaunchBall = false;

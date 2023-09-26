@@ -3,12 +3,13 @@
 
 #include "StickyBall.h"
 #include "Components/SphereComponent.h"
-#include "GameFramework/ProjectileMovementComponent.h"
+#include "TeleportationTile.h"
 
 void AStickyBall::BeginPlay()
 {
 	Super::BeginPlay();
 	//staticMesh->OnComponentHit.AddDynamic(this, &AStickyBall::OnHit);
+    isAttached = false;
 }
 
 /*void AStickyBall::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) {
@@ -28,15 +29,28 @@ void AStickyBall::NotifyHit(
 )
 {
     Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
-    projectileMovementComponent->Velocity = FVector(0.0f, 0.0f, 0.0f);
-    projectileMovementComponent->SetUpdatedComponent(collisionComponent);
-    AttachToActor(Other, FAttachmentTransformRules::KeepWorldTransform);
+    if (!isAttached) {
+        if (Cast<ATeleportationTile>(Other) == nullptr) {
+            collisionComponent->SetSimulatePhysics(false);
+            collisionComponent->SetNotifyRigidBodyCollision(false);
+            AttachToActor(Other, FAttachmentTransformRules::KeepWorldTransform);
+            isAttached = true;
+        }
+    }
 }
 
 void AStickyBall::DisableBall() {
-   DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+    Super::DisableBall();
+    if (isAttached) {
+        DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+        isAttached = false;
+    }
 }
 
 void AStickyBall::EnableBall() {
-   DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+    Super::EnableBall();
+    if (isAttached) {
+        DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+        isAttached = false;
+    }
 }

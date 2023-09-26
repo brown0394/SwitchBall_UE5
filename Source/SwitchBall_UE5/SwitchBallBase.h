@@ -26,7 +26,7 @@ public:
 	virtual void EnableBall();
 	virtual void DisableBall();
 	void AfterSwitch();
-	void FireInDirection(const FVector& ShootDirection, float impulseCharge);
+	void FireInDirection(const FVector& FiringPosition, const FVector& ShootDirection, float impulseCharge);
 
 protected:
 	// Called when the game starts or when spawned

@@ -42,7 +42,7 @@ AFPSProjectile::AFPSProjectile()
     if (!ProjectileMeshComponent)
     {
         ProjectileMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMeshComponent"));
-        auto Mesh = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));;
+        auto Mesh = ConstructorHelpers::FObjectFinder<UStaticMesh>(TEXT("ProjectileMeshComponent'/Engine/BasicShapes/Sphere.Sphere'"));;
         if (Mesh.Succeeded())
         {
             ProjectileMeshComponent->SetStaticMesh(Mesh.Object);
