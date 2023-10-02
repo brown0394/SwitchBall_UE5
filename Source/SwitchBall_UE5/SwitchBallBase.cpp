@@ -5,7 +5,6 @@
 #include "Components/SphereComponent.h"
 //#include "GameFramework/ProjectileMovementComponent.h"
 
-#define IMPULSEMULVAL 150.0f
 // Sets default values
 ASwitchBallBase::ASwitchBallBase()
 {
@@ -45,8 +44,9 @@ ASwitchBallBase::ASwitchBallBase()
 		staticMesh->SetStaticMesh(MeshAsset.Object);
 		staticMesh->SetupAttachment(collisionComponent);
 		staticMesh->SetRelativeScale3D(FVector(0.3, 0.3, 0.3));
+		staticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
-
+	ImpulseMulValue = 1.0f;
 	DisableBall();
 }
 
@@ -67,13 +67,11 @@ void ASwitchBallBase::Tick(float DeltaTime)
 void ASwitchBallBase::EnableBall() {
 	collisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	collisionComponent->SetSimulatePhysics(true);
-	collisionComponent->SetNotifyRigidBodyCollision(true);
 	SetActorHiddenInGame(false);
 }
 
 void ASwitchBallBase::DisableBall() {
 	collisionComponent->SetSimulatePhysics(false);
-	collisionComponent->SetNotifyRigidBodyCollision(false);
 	collisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	SetActorHiddenInGame(true);
 }
@@ -89,5 +87,5 @@ void ASwitchBallBase::FireInDirection(const FVector& FiringPosition, const FVect
 	//projectileMovementComponent->SetUpdatedComponent(collisionComponent);
 	
 	SetActorLocation(FiringPosition);
-	collisionComponent->AddImpulse(ShootDirection * impulseCharge * IMPULSEMULVAL);
+	collisionComponent->AddImpulse(ShootDirection * impulseCharge * ImpulseMulValue);
 }

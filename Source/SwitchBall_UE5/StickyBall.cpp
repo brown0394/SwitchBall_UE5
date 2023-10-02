@@ -41,16 +41,14 @@ void AStickyBall::NotifyHit(
 
 void AStickyBall::DisableBall() {
     Super::DisableBall();
-    if (isAttached) {
-        DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-        isAttached = false;
-    }
+    collisionComponent->SetNotifyRigidBodyCollision(false);
+    DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+    isAttached = true;
 }
 
 void AStickyBall::EnableBall() {
     Super::EnableBall();
-    if (isAttached) {
-        DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
-        isAttached = false;
-    }
+    DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+    collisionComponent->SetNotifyRigidBodyCollision(true);
+    isAttached = false;
 }

@@ -23,6 +23,9 @@ public:
 	UPROPERTY(EditAnywhere)
 		FVector defaultLocation;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Launch")
+		float ImpulseMulValue;
+
 	virtual void EnableBall();
 	virtual void DisableBall();
 	void AfterSwitch();

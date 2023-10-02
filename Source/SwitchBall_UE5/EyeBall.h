@@ -23,6 +23,7 @@ private:
 		class ASwitchBall_UE5Character* PlayerCharacter;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 		class UCameraComponent* FollowCamera;
+
 public:
 	AEyeBall();
 
