@@ -15,6 +15,7 @@ void APusherAIController::OnPossess(APawn* InPawn) {
 
 	auto character = Cast<APusherCharacter>(InPawn);
 	if (character && character->PusherBehaviorTree) {
+		BlackboardComp->InitializeBlackboard(*character->PusherBehaviorTree->BlackboardAsset);
 		TargetKeyID = BlackboardComp->GetKeyID("Target");
 		BehaviorComp->StartTree(*character->PusherBehaviorTree);
 	}

@@ -53,7 +53,7 @@ class ASwitchBall_UE5Character : public ACharacter
 
 public:
 	ASwitchBall_UE5Character();
-	
+	class ASwitchBallBase* getBallLaunched();
 
 protected:
 
