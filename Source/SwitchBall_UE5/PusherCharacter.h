@@ -16,10 +16,17 @@ public:
 	APusherCharacter();
 	UPROPERTY(EditAnywhere, Category = "BehaviorTree")
 		class UBehaviorTree* PusherBehaviorTree;
+
+	UPROPERTY(EditAnywhere, Category = "Sphere")
+		class USphereComponent* OverlapSphere;
+
+	class ASwitchBallBase* getBallOverlapped();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
+	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
+	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
+	class ASwitchBallBase* ballOverlapped;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

@@ -16,7 +16,7 @@ public:
 	ASwitchBallBase();
 	UPROPERTY()
 		UStaticMeshComponent* staticMesh;
-	UPROPERTY()
+	UPROPERTY(EditAnywhere)
 		class USphereComponent* collisionComponent;
 	UPROPERTY()
 		class UProjectileMovementComponent* projectileMovementComponent;

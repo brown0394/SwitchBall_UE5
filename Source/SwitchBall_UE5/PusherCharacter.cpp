@@ -2,6 +2,8 @@
 
 
 #include "PusherCharacter.h"
+#include "Components/SphereComponent.h"
+#include "SwitchBallBase.h"
 
 // Sets default values
 APusherCharacter::APusherCharacter()
@@ -9,6 +11,10 @@ APusherCharacter::APusherCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	OverlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
+	OverlapSphere->BodyInstance.SetCollisionProfileName(TEXT("NoCollision"));
+	OverlapSphere->SetupAttachment(RootComponent);
+	ballOverlapped = false;
 }
 
 // Called when the game starts or when spawned
@@ -32,3 +38,23 @@ void APusherCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 }
 
+void APusherCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
+{
+	ballOverlapped = Cast<ASwitchBallBase>(OtherActor);
+	if (ballOverlapped) {
+		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("overlapped"));
+	}
+}
+
+void APusherCharacter::NotifyActorEndOverlap(AActor* OtherActor)
+{
+	ASwitchBallBase* ball = Cast<ASwitchBallBase>(OtherActor);
+	if (ball) {
+		ballOverlapped = nullptr;
+		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("end overlap"));
+	}
+}
+
+ASwitchBallBase* APusherCharacter::getBallOverlapped() {
+	return ballOverlapped;
+}
