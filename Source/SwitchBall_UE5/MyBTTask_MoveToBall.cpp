@@ -15,7 +15,7 @@ EBTNodeResult::Type UMyBTTask_MoveToBall::ExecuteTask(UBehaviorTreeComponent& Ow
 	//ASwitchBallBase* ball = Cast<ASwitchBallBase>(blackBoard->GetValue<UBlackboardKeyType_Object>(pusherController->TargetKeyID));
 	ASwitchBallBase* ball = pusherCharacter->getBallOverlapped();
 	if (ball) {
-		pusherController->MoveToActor(ball, 50.0f);
+		pusherController->MoveToActor(ball);
 		return EBTNodeResult::Succeeded;
 	}
 

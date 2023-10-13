@@ -20,6 +20,13 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Sphere")
 		class USphereComponent* OverlapSphere;
 
+	UPROPERTY(EditAnywhere, Category = "BehaviorTree")
+		AActor* TrashBin;
+	UPROPERTY(EditAnywhere, Category = "Distance")
+		float DistanceWithBall;
+
+	bool isBallCloseEnough();
+
 	class ASwitchBallBase* getBallOverlapped();
 protected:
 	// Called when the game starts or when spawned

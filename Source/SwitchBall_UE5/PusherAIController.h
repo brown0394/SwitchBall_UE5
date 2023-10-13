@@ -21,7 +21,6 @@ private:
 
 public:
 	APusherAIController();
-
 	virtual void OnPossess(APawn* InPawn) override;
 	FBlackboard::FKey TargetKeyID;
 };

@@ -58,3 +58,12 @@ void APusherCharacter::NotifyActorEndOverlap(AActor* OtherActor)
 ASwitchBallBase* APusherCharacter::getBallOverlapped() {
 	return ballOverlapped;
 }
+
+bool APusherCharacter::isBallCloseEnough() {
+	if (ballOverlapped) {
+		if (GetDistanceTo(ballOverlapped) < DistanceWithBall) {
+			return true;
+		 }
+	}
+	return false;
+}

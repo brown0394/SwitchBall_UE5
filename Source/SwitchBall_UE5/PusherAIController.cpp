@@ -17,6 +17,8 @@ void APusherAIController::OnPossess(APawn* InPawn) {
 	if (character && character->PusherBehaviorTree) {
 		BlackboardComp->InitializeBlackboard(*character->PusherBehaviorTree->BlackboardAsset);
 		TargetKeyID = BlackboardComp->GetKeyID("Target");
+		BlackboardComp->SetValueAsVector("DefaultLocation", character->GetActorLocation());
+		BlackboardComp->SetValueAsObject("TrashBin", character->TrashBin);
 		BehaviorComp->StartTree(*character->PusherBehaviorTree);
 	}
 }
