@@ -4,6 +4,8 @@
 #include "PusherCharacter.h"
 #include "Components/SphereComponent.h"
 #include "SwitchBallBase.h"
+#include "TeleportationTile.h"
+#include "SwitchBall_UE5Character.h"
 
 // Sets default values
 APusherCharacter::APusherCharacter()
@@ -14,7 +16,8 @@ APusherCharacter::APusherCharacter()
 	OverlapSphere = CreateDefaultSubobject<USphereComponent>(TEXT("SphereComponent"));
 	OverlapSphere->BodyInstance.SetCollisionProfileName(TEXT("NoCollision"));
 	OverlapSphere->SetupAttachment(RootComponent);
-	ballOverlapped = false;
+	ballOverlapped = nullptr;
+	characterOverlapped = nullptr;
 }
 
 // Called when the game starts or when spawned
@@ -40,9 +43,16 @@ void APusherCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 void APusherCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	ballOverlapped = Cast<ASwitchBallBase>(OtherActor);
-	if (ballOverlapped) {
-		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("overlapped"));
+	ASwitchBallBase* ball = Cast<ASwitchBallBase>(OtherActor);
+	if (ball) {
+		ballOverlapped = ball;
+		//GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("overlapped"));
+	}
+	else {
+		ASwitchBall_UE5Character* character = Cast<ASwitchBall_UE5Character>(OtherActor);
+		if (character) {
+			characterOverlapped = character;
+		}
 	}
 }
 
@@ -52,6 +62,12 @@ void APusherCharacter::NotifyActorEndOverlap(AActor* OtherActor)
 	if (ball) {
 		ballOverlapped = nullptr;
 		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("end overlap"));
+	}
+	else {
+		ASwitchBall_UE5Character* character = Cast<ASwitchBall_UE5Character>(OtherActor);
+		if (character) {
+			characterOverlapped = nullptr;
+		}
 	}
 }
 
@@ -66,4 +82,8 @@ bool APusherCharacter::isBallCloseEnough() {
 		 }
 	}
 	return false;
+}
+
+ASwitchBall_UE5Character* APusherCharacter::getPlayerOverlapped() {
+	return characterOverlapped;
 }

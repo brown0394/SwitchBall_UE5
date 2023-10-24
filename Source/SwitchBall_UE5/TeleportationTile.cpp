@@ -4,6 +4,7 @@
 #include "TeleportationTile.h"
 #include "Kismet/GameplayStatics.h"
 #include "SwitchBall_UE5Character.h"
+#include "PusherCharacter.h"
 
 // Sets default values
 ATeleportationTile::ATeleportationTile()
@@ -24,6 +25,7 @@ ATeleportationTile::ATeleportationTile()
 		staticMesh->SetMaterial(0, materialInstance);*/
 		staticMesh->SetMobility(EComponentMobility::Static);
 		staticMesh->SetNotifyRigidBodyCollision(true);
+		staticMesh->SetCollisionProfileName(TEXT("BlockAll"));
 	}
 	
 }
@@ -54,5 +56,8 @@ void ATeleportationTile::NotifyHit(
 )
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
-	Other->SetActorLocation(playerStartLocation);
+	APusherCharacter* pusher = Cast<APusherCharacter>(Other);
+	if (pusher == nullptr) {
+		Other->SetActorLocation(playerStartLocation);
+	}
 }

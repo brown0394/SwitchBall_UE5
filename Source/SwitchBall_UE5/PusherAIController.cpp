@@ -17,8 +17,9 @@ void APusherAIController::OnPossess(APawn* InPawn) {
 	if (character && character->PusherBehaviorTree) {
 		BlackboardComp->InitializeBlackboard(*character->PusherBehaviorTree->BlackboardAsset);
 		TargetKeyID = BlackboardComp->GetKeyID("Target");
-		BlackboardComp->SetValueAsVector("DefaultLocation", character->GetActorLocation());
+		BlackboardComp->SetValueAsVector("DefaultLocation", character->GetActorLocation()); 
 		BlackboardComp->SetValueAsObject("TrashBin", character->TrashBin);
+		BlackboardComp->SetValueAsFloat("DistanceFromPlayer", character->DistanceWithPlayer);
 		BehaviorComp->StartTree(*character->PusherBehaviorTree);
 	}
 }

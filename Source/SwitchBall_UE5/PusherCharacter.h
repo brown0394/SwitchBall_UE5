@@ -22,11 +22,15 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "BehaviorTree")
 		AActor* TrashBin;
+
 	UPROPERTY(EditAnywhere, Category = "Distance")
 		float DistanceWithBall;
 
-	bool isBallCloseEnough();
+	UPROPERTY(EditAnywhere, Category = "Distance")
+		float DistanceWithPlayer;
 
+	bool isBallCloseEnough();
+	class ASwitchBall_UE5Character* getPlayerOverlapped();
 	class ASwitchBallBase* getBallOverlapped();
 protected:
 	// Called when the game starts or when spawned
@@ -34,6 +38,7 @@ protected:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 	class ASwitchBallBase* ballOverlapped;
+	class ASwitchBall_UE5Character* characterOverlapped;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
