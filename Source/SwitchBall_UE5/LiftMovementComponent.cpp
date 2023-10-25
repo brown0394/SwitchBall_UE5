@@ -13,8 +13,11 @@ ULiftMovementComponent::ULiftMovementComponent()
 	xDistance = 0.0f;
 	yDistance = 0.0f;
 	zDistance = 0.0f;
-	LerpAlpha = 0.1f;
 	shouldReturn = false;
+	wait = true;
+	secPassed = 0.0f;
+	timeToReachDest = 1.0f;
+	alphaStep = 0.1f;
 	// ...
 }
 
@@ -26,10 +29,11 @@ void ULiftMovementComponent::BeginPlay()
 	owner = GetOwner();
 	if (owner != nullptr) {
 		defaultLocation = owner->GetActorLocation();
+		targetLocation = owner->ActorToWorld().TransformPositionNoScale(FVector(xDistance, yDistance, zDistance));
 	}
-	targetLocation = owner->ActorToWorld().TransformPositionNoScale(FVector(xDistance, yDistance, zDistance));
-	// ...
 	
+	// ...
+	alphaStep = 1 / timeToReachDest;
 }
 
 
@@ -37,19 +41,32 @@ void ULiftMovementComponent::BeginPlay()
 void ULiftMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	if (shouldReturn) {
-		owner->SetActorLocation(FMath::Lerp(owner->GetActorLocation(), defaultLocation, LerpAlpha));
-		if (FVector::Distance(owner->GetActorLocation(), defaultLocation) < 1.0f) {
-			shouldReturn = false;
+	secPassed += DeltaTime;
+	if (wait) {
+		if (secPassed > secToWait) {
+			wait = false;
+			secPassed = 0;
 		}
 	}
 	else {
-		owner->SetActorLocation(FMath::Lerp(owner->GetActorLocation(), targetLocation, LerpAlpha));
-		if (FVector::Distance(owner->GetActorLocation(), targetLocation) < 1.0f) {
-			shouldReturn = true;
+		if (shouldReturn) {
+			FVector newLoc = FMath::Lerp(targetLocation, defaultLocation, secPassed * alphaStep);
+			owner->SetActorLocation(newLoc);
+			if (secPassed * alphaStep >= 1) {
+				shouldReturn = false;
+				secPassed = 0;
+				wait = true;
+			}
+		}
+		else {
+			owner->SetActorLocation(FMath::Lerp(defaultLocation, targetLocation, secPassed * alphaStep));
+			if (secPassed * alphaStep >= 1) {
+				shouldReturn = true;
+				secPassed = 0;
+				wait = true;
+			}
 		}
 	}
-	
 	// ...
 }
 

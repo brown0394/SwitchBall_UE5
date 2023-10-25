@@ -26,11 +26,12 @@ public:
 		float zDistance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoveTo")
-		float LerpAlpha;
+		float timeToReachDest;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MoveTo")
+		float secToWait;
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -39,4 +40,7 @@ private:
 	FVector targetLocation;
 	AActor* owner;
 	bool shouldReturn;
+	bool wait;
+	float secPassed;
+	float alphaStep;
 };
