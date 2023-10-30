@@ -65,7 +65,7 @@ ASwitchBall_UE5Character::ASwitchBall_UE5Character()
 
 	impulseToLaunch = 1.0f;
 	shouldChargeIncrease = true;
-	currentBall = 0;
+	currentBall = ballType::SWITCHBALL;
 	canLaunchBall = true;
 }
 
@@ -87,6 +87,11 @@ void ASwitchBall_UE5Character::BeginPlay()
 	switchBallPlayerController = Cast<ASwitchBallPlayerController>(UGameplayStatics::GetActorOfClass(this, ASwitchBallPlayerController::StaticClass()));
 	this->SetActorTickEnabled(false);
 
+}
+
+void ASwitchBall_UE5Character::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+	Super::EndPlay(EndPlayReason);
+	GetWorld()->GetTimerManager().ClearTimer(timeHandle);
 }
 
 void ASwitchBall_UE5Character::Tick(float DeltaTime)
@@ -192,7 +197,7 @@ void ASwitchBall_UE5Character::LaunchBall()
 {
 	if (canLaunchBall) {
 		this->SetActorTickEnabled(false);
-		switchBallPlayerController->setWidgetVisiblilty(false);
+		switchBallPlayerController->setProgressBarVisiblilty(false);
 
 		//switchBalls[currentBall]->staticMesh->AddImpulse(FollowCamera->GetForwardVector() * impulseToLaunch * IMPULSEMULVAL);
 		switchBalls[currentBall]->FireInDirection(FollowCamera->K2_GetComponentLocation() + FollowCamera->GetForwardVector() * 100, FollowCamera->GetForwardVector(), impulseToLaunch);
@@ -204,30 +209,61 @@ void ASwitchBall_UE5Character::LaunchBall()
 
 void ASwitchBall_UE5Character::ChargeImpulse() {
 	if (canLaunchBall) {
-		switchBallPlayerController->setWidgetVisiblilty(true);
+		switchBallPlayerController->setProgressBarVisiblilty(true);
 		this->SetActorTickEnabled(true);
 	}
 }
 
 void ASwitchBall_UE5Character::ChangeToSwitchBall() {
 	if (canLaunchBall) {
-		currentBall = 0;
+		FTimerManager* timerManager = &GetWorld()->GetTimerManager();
+		CheckTimerAndSetTextVisibility(timerManager);
+		currentBall = ballType::SWITCHBALL;
+		timerManager->SetTimer(timeHandle, this, &ASwitchBall_UE5Character::HideSwitchBallText, 2, false);
+		switchBallPlayerController->setBallTextVisiblilty(true, ballType::SWITCHBALL);
 	}
 }
 
 void ASwitchBall_UE5Character::ChangeToStickyBall() {
 	if (canLaunchBall) {
-		currentBall = 1;
+		FTimerManager* timerManager = &GetWorld()->GetTimerManager();
+		CheckTimerAndSetTextVisibility(timerManager);
+		currentBall = ballType::STICKYBALL;
+		timerManager->SetTimer(timeHandle, this, &ASwitchBall_UE5Character::HideStickyBallText, 2, false);
+		switchBallPlayerController->setBallTextVisiblilty(true, ballType::STICKYBALL);
 	}
 }
 
 void ASwitchBall_UE5Character::ChangeToEyeBall() {
 	if (canLaunchBall) {
-		currentBall = 2;
+		FTimerManager* timerManager = &GetWorld()->GetTimerManager();
+		CheckTimerAndSetTextVisibility(timerManager);
+		currentBall = ballType::EYEBALL;
+		timerManager->SetTimer(timeHandle, this, &ASwitchBall_UE5Character::HideEyeBallText, 2, false);
+		switchBallPlayerController->setBallTextVisiblilty(true, ballType::EYEBALL);
 	}
 }
 
 ASwitchBallBase* ASwitchBall_UE5Character::getBallLaunched() {
 	if (canLaunchBall) return nullptr;
 	return switchBalls[currentBall];
+}
+
+void ASwitchBall_UE5Character::HideSwitchBallText() {
+	switchBallPlayerController->setBallTextVisiblilty(false, ballType::SWITCHBALL);
+}
+
+void ASwitchBall_UE5Character::HideStickyBallText() {
+	switchBallPlayerController->setBallTextVisiblilty(false, ballType::STICKYBALL);
+}
+
+void ASwitchBall_UE5Character::HideEyeBallText() {
+	switchBallPlayerController->setBallTextVisiblilty(false, ballType::EYEBALL);
+}
+
+void ASwitchBall_UE5Character::CheckTimerAndSetTextVisibility(FTimerManager* timerManager) {
+	if (timerManager->IsTimerActive(timeHandle)) {
+		timerManager->ClearTimer(timeHandle);
+		switchBallPlayerController->setBallTextVisiblilty(false, static_cast<ballType>(currentBall));
+	}
 }

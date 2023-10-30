@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "SwitchBallWidget.h"
 #include "SwitchBallPlayerController.generated.h"
 
 /**
@@ -16,14 +17,15 @@ class SWITCHBALL_UE5_API ASwitchBallPlayerController : public APlayerController
 public: 
 	ASwitchBallPlayerController();
 	UPROPERTY(EditAnywhere, Category = "Widget")
-		TSubclassOf<class USwitchBallWidget> SBWidgetClass;
+		TSubclassOf<USwitchBallWidget> SBWidgetClass;
 
-	void setWidgetVisiblilty(bool on);
+	void setProgressBarVisiblilty(bool on);
+	void setBallTextVisiblilty(bool on, ballType type);
 	void updateWidget(float &progressVal, float progressMax);
 
 private:
 	UPROPERTY()
-		class USwitchBallWidget* sbWidget;
+		USwitchBallWidget* sbWidget;
 
 protected:
 	virtual void BeginPlay();

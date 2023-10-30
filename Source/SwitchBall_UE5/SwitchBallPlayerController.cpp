@@ -2,7 +2,6 @@
 
 
 #include "SwitchBallPlayerController.h"
-#include "SwitchBallWidget.h"
 #include "Blueprint/UserWidget.h"
 
 
@@ -16,7 +15,10 @@ void ASwitchBallPlayerController::BeginPlay() {
 
 	if (SBWidgetClass) {
 		sbWidget = CreateWidget<USwitchBallWidget>(this, SBWidgetClass);
-		sbWidget->SetVisibility(ESlateVisibility::Hidden);
+		sbWidget->SetChargeBarVisibility(false);
+		sbWidget->SetSwitchBallTextVisibility(false, ballType::SWITCHBALL);
+		sbWidget->SetSwitchBallTextVisibility(false, ballType::STICKYBALL);
+		sbWidget->SetSwitchBallTextVisibility(false, ballType::EYEBALL);
 		sbWidget->AddToViewport();
 	}
 }
@@ -32,16 +34,14 @@ void ASwitchBallPlayerController::EndPlay(const EEndPlayReason::Type EndPlayReas
 	Super::EndPlay(EndPlayReason);
 }
 
-void ASwitchBallPlayerController::setWidgetVisiblilty(bool on) {
-	if (on) {
-		sbWidget->SetVisibility(ESlateVisibility::Visible);
-	}
-	else {
-		sbWidget->SetVisibility(ESlateVisibility::Hidden);
-	}
-	
+void ASwitchBallPlayerController::setProgressBarVisiblilty(bool on) {
+	sbWidget->SetChargeBarVisibility(on);
 }
 
 void ASwitchBallPlayerController::updateWidget(float &progressVal, float progressMax) {
 	sbWidget->SetChargeBar(progressVal, progressMax);
+}
+
+void ASwitchBallPlayerController::setBallTextVisiblilty(bool on, ballType type) {
+	sbWidget->SetSwitchBallTextVisibility(on, type);
 }

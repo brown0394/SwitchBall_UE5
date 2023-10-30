@@ -75,12 +75,21 @@ protected:
 
 	void ChangeToEyeBall();
 
+	void HideSwitchBallText();
+
+	void HideStickyBallText();
+
+	void HideEyeBallText();
+
+	void CheckTimerAndSetTextVisibility(FTimerManager* timerManager);
 protected:
 	// APawn interface
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	
 	// To add mapping context
 	virtual void BeginPlay();
+
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason);
 
 	virtual void Tick(float DeltaTime) override;
 
@@ -98,5 +107,6 @@ private:
 	TArray<class ASwitchBallBase*> switchBalls;
 	int currentBall;
 	bool canLaunchBall;
+	FTimerHandle timeHandle;
 };
 
