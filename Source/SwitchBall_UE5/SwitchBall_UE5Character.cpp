@@ -67,6 +67,19 @@ ASwitchBall_UE5Character::ASwitchBall_UE5Character()
 	shouldChargeIncrease = true;
 	currentBall = ballType::SWITCHBALL;
 	canLaunchBall = true;
+
+	auto SoundAsset =  ConstructorHelpers::FObjectFinder<USoundWave> (TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/ThirdPerson/Audio/MS_TeleportMetaSoundSource.MS_TeleportMetaSoundSource'"));
+	if (SoundAsset.Succeeded()) {
+		TeleportationSound = SoundAsset.Object;
+	}
+	SoundAsset = ConstructorHelpers::FObjectFinder<USoundWave> (TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/ThirdPerson/Audio/MS_ChangeBalltMetaSoundSource.MS_ChangeBalltMetaSoundSource'"));
+	if (SoundAsset.Succeeded()) {
+		SelectionSound = SoundAsset.Object;
+	}
+	SoundAsset = ConstructorHelpers::FObjectFinder<USoundWave> (TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/ThirdPerson/Audio/MS_LaunchMetaSoundSource.MS_LaunchMetaSoundSource'"));
+	if (SoundAsset.Succeeded()) {
+		LaunchSound = SoundAsset.Object;
+	}
 }
 
 void ASwitchBall_UE5Character::BeginPlay()
@@ -92,6 +105,7 @@ void ASwitchBall_UE5Character::BeginPlay()
 void ASwitchBall_UE5Character::EndPlay(const EEndPlayReason::Type EndPlayReason) {
 	Super::EndPlay(EndPlayReason);
 	GetWorld()->GetTimerManager().ClearTimer(timeHandle);
+	GetWorld()->GetTimerManager().ClearTimer(SwitchTimeHandle);
 }
 
 void ASwitchBall_UE5Character::Tick(float DeltaTime)
@@ -186,7 +200,8 @@ void ASwitchBall_UE5Character::Switch()
 	
 	if (!canLaunchBall) {
 		if (currentBall != 2) {
-			SetActorLocation(switchBalls[currentBall]->GetActorLocation() + FVector(0.0f, 0.0f, 50.0f));
+			this->SetActorLocation(switchBalls[currentBall]->GetActorLocation());
+			GetWorld()->GetTimerManager().SetTimer(SwitchTimeHandle, this, &ASwitchBall_UE5Character::playTeleportSound, 0.05f, false);
 		}
 		switchBalls[currentBall]->AfterSwitch();
 		canLaunchBall = true;
@@ -198,7 +213,7 @@ void ASwitchBall_UE5Character::LaunchBall()
 	if (canLaunchBall) {
 		this->SetActorTickEnabled(false);
 		switchBallPlayerController->setProgressBarVisiblilty(false);
-
+		UGameplayStatics::PlaySoundAtLocation(this, LaunchSound, GetActorLocation());
 		//switchBalls[currentBall]->staticMesh->AddImpulse(FollowCamera->GetForwardVector() * impulseToLaunch * IMPULSEMULVAL);
 		switchBalls[currentBall]->FireInDirection(FollowCamera->K2_GetComponentLocation() + FollowCamera->GetForwardVector() * 100, FollowCamera->GetForwardVector(), impulseToLaunch);
 		impulseToLaunch = 1.0f;
@@ -218,6 +233,7 @@ void ASwitchBall_UE5Character::ChangeToSwitchBall() {
 	if (canLaunchBall) {
 		FTimerManager* timerManager = &GetWorld()->GetTimerManager();
 		CheckTimerAndSetTextVisibility(timerManager);
+		UGameplayStatics::PlaySoundAtLocation(this, SelectionSound, GetActorLocation());
 		currentBall = ballType::SWITCHBALL;
 		timerManager->SetTimer(timeHandle, this, &ASwitchBall_UE5Character::HideSwitchBallText, 2, false);
 		switchBallPlayerController->setBallTextVisiblilty(true, ballType::SWITCHBALL);
@@ -228,6 +244,7 @@ void ASwitchBall_UE5Character::ChangeToStickyBall() {
 	if (canLaunchBall) {
 		FTimerManager* timerManager = &GetWorld()->GetTimerManager();
 		CheckTimerAndSetTextVisibility(timerManager);
+		UGameplayStatics::PlaySoundAtLocation(this, SelectionSound, GetActorLocation());
 		currentBall = ballType::STICKYBALL;
 		timerManager->SetTimer(timeHandle, this, &ASwitchBall_UE5Character::HideStickyBallText, 2, false);
 		switchBallPlayerController->setBallTextVisiblilty(true, ballType::STICKYBALL);
@@ -238,6 +255,7 @@ void ASwitchBall_UE5Character::ChangeToEyeBall() {
 	if (canLaunchBall) {
 		FTimerManager* timerManager = &GetWorld()->GetTimerManager();
 		CheckTimerAndSetTextVisibility(timerManager);
+		UGameplayStatics::PlaySoundAtLocation(this, SelectionSound, GetActorLocation());
 		currentBall = ballType::EYEBALL;
 		timerManager->SetTimer(timeHandle, this, &ASwitchBall_UE5Character::HideEyeBallText, 2, false);
 		switchBallPlayerController->setBallTextVisiblilty(true, ballType::EYEBALL);
@@ -266,4 +284,8 @@ void ASwitchBall_UE5Character::CheckTimerAndSetTextVisibility(FTimerManager* tim
 		timerManager->ClearTimer(timeHandle);
 		switchBallPlayerController->setBallTextVisiblilty(false, static_cast<ballType>(currentBall));
 	}
+}
+
+void ASwitchBall_UE5Character::playTeleportSound() {
+	UGameplayStatics::PlaySoundAtLocation(this, TeleportationSound, GetActorLocation());
 }

@@ -100,13 +100,29 @@ public:
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
 private:
-
+	UPROPERTY()
 	class ASwitchBallPlayerController* switchBallPlayerController;
 	float impulseToLaunch;
 	bool shouldChargeIncrease;
+
+	UPROPERTY()
 	TArray<class ASwitchBallBase*> switchBalls;
 	int currentBall;
 	bool canLaunchBall;
+	UPROPERTY()
 	FTimerHandle timeHandle;
+
+	UPROPERTY()
+		FTimerHandle SwitchTimeHandle;
+
+	UPROPERTY()
+	USoundWave* TeleportationSound;
+	UPROPERTY()
+	USoundWave* SelectionSound;
+
+	UPROPERTY()
+	USoundWave* LaunchSound;
+
+	void playTeleportSound();
 };
 

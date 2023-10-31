@@ -27,7 +27,10 @@ ATeleportationTile::ATeleportationTile()
 		staticMesh->SetNotifyRigidBodyCollision(true);
 		staticMesh->SetCollisionProfileName(TEXT("BlockAll"));
 	}
-	
+	auto SoundAsset = ConstructorHelpers::FObjectFinder<USoundWave>(TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/ThirdPerson/Audio/MS_TeleportMetaSoundSource.MS_TeleportMetaSoundSource'"));
+	if (SoundAsset.Succeeded()) {
+		TeleportationSound = SoundAsset.Object;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -58,6 +61,7 @@ void ATeleportationTile::NotifyHit(
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 	APusherCharacter* pusher = Cast<APusherCharacter>(Other);
 	if (pusher == nullptr) {
+		UGameplayStatics::PlaySoundAtLocation(this, TeleportationSound, GetActorLocation());
 		Other->SetActorLocation(playerStartLocation);
 	}
 }

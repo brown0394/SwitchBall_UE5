@@ -18,8 +18,7 @@ public:
 		UStaticMeshComponent* staticMesh;
 	UPROPERTY(EditAnywhere)
 		class USphereComponent* collisionComponent;
-	UPROPERTY()
-		class UProjectileMovementComponent* projectileMovementComponent;
+
 	UPROPERTY(EditAnywhere)
 		FVector defaultLocation;
 

@@ -16,7 +16,10 @@ class SWITCHBALL_UE5_API APusherAIController : public AAIController
 {
 	GENERATED_BODY()
 private:
+	UPROPERTY()
 	UBehaviorTreeComponent* BehaviorComp;
+
+	UPROPERTY()
 	UBlackboardComponent* BlackboardComp;
 
 public:

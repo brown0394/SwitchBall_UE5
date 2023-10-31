@@ -26,6 +26,9 @@ protected:
 	UPROPERTY(VisibleDefaultsOnly, Category = Movement)
 		UMaterialInstanceDynamic* materialInstance;
 
+	UPROPERTY()
+		USoundWave* TeleportationSound;
+
 	UFUNCTION()
 		void NotifyHit(
 			UPrimitiveComponent* MyComp,
