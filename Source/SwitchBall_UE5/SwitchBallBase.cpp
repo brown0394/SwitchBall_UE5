@@ -3,6 +3,7 @@
 
 #include "SwitchBallBase.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 //#include "GameFramework/ProjectileMovementComponent.h"
 
 // Sets default values
@@ -22,7 +23,6 @@ ASwitchBallBase::ASwitchBallBase()
 		collisionComponent->BodyInstance.SetCollisionProfileName(TEXT("BlockAll"));
 		// Set the sphere's collision radius.
 		collisionComponent->InitSphereRadius(15.0f);
-		//collisionComponent->SetCollisionProfileName("BlockAll");
 		// Set the root component to be the collision component.
 		RootComponent = collisionComponent;
 	}
@@ -46,6 +46,10 @@ ASwitchBallBase::ASwitchBallBase()
 		staticMesh->SetRelativeScale3D(FVector(0.3, 0.3, 0.3));
 		staticMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
+	auto SoundAsset = ConstructorHelpers::FObjectFinder<USoundWave>(TEXT("/Script/MetasoundEngine.MetaSoundSource'/Game/ThirdPerson/Audio/MS_BounceMetaSoundSource.MS_BounceMetaSoundSource'"));
+	if (SoundAsset.Succeeded()) {
+		HitSound = SoundAsset.Object;
+	}
 	ImpulseMulValue = 1.0f;
 	DisableBall();
 }
@@ -68,11 +72,13 @@ void ASwitchBallBase::EnableBall() {
 	collisionComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	collisionComponent->SetSimulatePhysics(true);
 	SetActorHiddenInGame(false);
+	collisionComponent->SetNotifyRigidBodyCollision(true);
 }
 
 void ASwitchBallBase::DisableBall() {
 	collisionComponent->SetSimulatePhysics(false);
 	collisionComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	collisionComponent->SetNotifyRigidBodyCollision(false);
 	SetActorHiddenInGame(true);
 }
 
@@ -88,4 +94,22 @@ void ASwitchBallBase::FireInDirection(const FVector& FiringPosition, const FVect
 	
 	SetActorLocation(FiringPosition);
 	collisionComponent->AddImpulse(ShootDirection * impulseCharge * ImpulseMulValue);
+}
+
+void ASwitchBallBase::NotifyHit(
+	UPrimitiveComponent* MyComp,
+	AActor* Other,
+	UPrimitiveComponent* OtherComp,
+	bool bSelfMoved,
+	FVector HitLocation,
+	FVector HitNormal,
+	FVector NormalImpulse,
+	const FHitResult& Hit
+)
+{
+	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
+	if (NormalImpulse.Length() > 280) {
+		//GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Green, FString::Printf(TEXT("%f"), NormalImpulse.Length()));
+		UGameplayStatics::PlaySoundAtLocation(this, HitSound, HitLocation, NormalImpulse.Length() / 5000);
+	}
 }

@@ -29,10 +29,22 @@ public:
 	virtual void DisableBall();
 	void AfterSwitch();
 	void FireInDirection(const FVector& FiringPosition, const FVector& ShootDirection, float impulseCharge);
-
+	virtual void NotifyHit(
+		UPrimitiveComponent* MyComp,
+		AActor* Other,
+		UPrimitiveComponent* OtherComp,
+		bool bSelfMoved,
+		FVector HitLocation,
+		FVector HitNormal,
+		FVector NormalImpulse,
+		const FHitResult& Hit
+	);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	UPROPERTY()
+		USoundWave* HitSound;
 
 public:	
 	// Called every frame
