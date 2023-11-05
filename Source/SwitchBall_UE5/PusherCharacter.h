@@ -39,11 +39,12 @@ protected:
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
 	class ASwitchBallBase* ballOverlapped;
 	class ASwitchBall_UE5Character* characterOverlapped;
+	FVector DefaultLocation;
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
+	FVector GetDefaultLocation();
 };

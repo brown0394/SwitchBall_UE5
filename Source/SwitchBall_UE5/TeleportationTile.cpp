@@ -60,8 +60,11 @@ void ATeleportationTile::NotifyHit(
 {
 	Super::NotifyHit(MyComp, Other, OtherComp, bSelfMoved, HitLocation, HitNormal, NormalImpulse, Hit);
 	APusherCharacter* pusher = Cast<APusherCharacter>(Other);
+	UGameplayStatics::PlaySoundAtLocation(this, TeleportationSound, GetActorLocation());
 	if (pusher == nullptr) {
-		UGameplayStatics::PlaySoundAtLocation(this, TeleportationSound, GetActorLocation());
 		Other->SetActorLocation(playerStartLocation);
+	}
+	else {
+		pusher->SetActorLocation(pusher->GetDefaultLocation());
 	}
 }

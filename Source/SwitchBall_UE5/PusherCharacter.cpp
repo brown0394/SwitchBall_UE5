@@ -24,7 +24,7 @@ APusherCharacter::APusherCharacter()
 void APusherCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	DefaultLocation = GetActorLocation();
 }
 
 // Called every frame
@@ -51,6 +51,7 @@ void APusherCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 	else {
 		ASwitchBall_UE5Character* character = Cast<ASwitchBall_UE5Character>(OtherActor);
 		if (character) {
+			GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("character overlapped"));
 			characterOverlapped = character;
 		}
 	}
@@ -61,7 +62,6 @@ void APusherCharacter::NotifyActorEndOverlap(AActor* OtherActor)
 	ASwitchBallBase* ball = Cast<ASwitchBallBase>(OtherActor);
 	if (ball) {
 		ballOverlapped = nullptr;
-		GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("end overlap"));
 	}
 	else {
 		ASwitchBall_UE5Character* character = Cast<ASwitchBall_UE5Character>(OtherActor);
@@ -86,4 +86,8 @@ bool APusherCharacter::isBallCloseEnough() {
 
 ASwitchBall_UE5Character* APusherCharacter::getPlayerOverlapped() {
 	return characterOverlapped;
+}
+
+FVector APusherCharacter::GetDefaultLocation() {
+	return DefaultLocation;
 }

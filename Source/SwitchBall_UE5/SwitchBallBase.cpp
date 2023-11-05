@@ -96,6 +96,10 @@ void ASwitchBallBase::FireInDirection(const FVector& FiringPosition, const FVect
 	collisionComponent->AddImpulse(ShootDirection * impulseCharge * ImpulseMulValue);
 }
 
+void ASwitchBallBase::FireInDirection(const FVector& ShootDirection, float impulseCharge) {
+	collisionComponent->AddImpulse(ShootDirection * impulseCharge * ImpulseMulValue);
+}
+
 void ASwitchBallBase::NotifyHit(
 	UPrimitiveComponent* MyComp,
 	AActor* Other,
