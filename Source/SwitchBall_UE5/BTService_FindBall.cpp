@@ -16,9 +16,9 @@ void UBTService_FindBall::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* Nod
 	auto PusherAIController = Cast<APusherAIController>(OwnerComp.GetAIOwner());
 
 	if (PusherAIController) {
-		ASwitchBall_UE5Character* PlayerCharacter = Cast<ASwitchBall_UE5Character>(GetWorld()->GetFirstPlayerController()->GetCharacter());
+		TObjectPtr<ASwitchBall_UE5Character> PlayerCharacter = Cast<ASwitchBall_UE5Character>(GetWorld()->GetFirstPlayerController()->GetCharacter());
 		if (PlayerCharacter) {
-			ASwitchBallBase* ball = PlayerCharacter->getBallLaunched();
+			TObjectPtr<ASwitchBallBase> ball = PlayerCharacter->getBallLaunched();
 			if (ball) {
 				OwnerComp.GetBlackboardComponent()->SetValue<UBlackboardKeyType_Object>(PusherAIController->TargetKeyID, ball);
 				GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("found"));

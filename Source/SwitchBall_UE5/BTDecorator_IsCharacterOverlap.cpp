@@ -6,7 +6,7 @@
 #include "PusherAIController.h"
 
 bool UBTDecorator_IsCharacterOverlap::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)const {
-	APusherCharacter* character = Cast<APusherCharacter>(OwnerComp.GetAIOwner()->GetCharacter());
+	TObjectPtr<APusherCharacter> character = Cast<APusherCharacter>(OwnerComp.GetAIOwner()->GetCharacter());
 	if (character && character->getPlayerOverlapped()) {
 		return true;
 	}

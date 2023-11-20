@@ -19,7 +19,7 @@ void ALaunchTriggerBox::BeginPlay()
 
 void ALaunchTriggerBox::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-	ASwitchBallBase* ball = Cast<ASwitchBallBase>(OtherActor);
+	TObjectPtr<ASwitchBallBase> ball = Cast<ASwitchBallBase>(OtherActor);
 	if (ball) {
 		ballOverlapped = ball;
 		//GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("overlapped"));
@@ -28,7 +28,7 @@ void ALaunchTriggerBox::NotifyActorBeginOverlap(AActor* OtherActor)
 
 void ALaunchTriggerBox::NotifyActorEndOverlap(AActor* OtherActor)
 {
-	ASwitchBallBase* ball = Cast<ASwitchBallBase>(OtherActor);
+	TObjectPtr<ASwitchBallBase> ball = Cast<ASwitchBallBase>(OtherActor);
 	if (ball) {
 		ballOverlapped = nullptr;
 	}

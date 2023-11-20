@@ -15,13 +15,13 @@ public:
 	// Sets default values for this character's properties
 	APusherCharacter();
 	UPROPERTY(EditAnywhere, Category = "BehaviorTree")
-		class UBehaviorTree* PusherBehaviorTree;
+		TObjectPtr<class UBehaviorTree> PusherBehaviorTree;
 
 	UPROPERTY(EditAnywhere, Category = "Sphere")
-		class USphereComponent* OverlapSphere;
+		TObjectPtr<class USphereComponent> OverlapSphere;
 
 	UPROPERTY(EditAnywhere, Category = "BehaviorTree")
-		AActor* TrashBin;
+		TObjectPtr<AActor> TrashBin;
 
 	UPROPERTY(EditAnywhere, Category = "Distance")
 		float DistanceWithBall;
@@ -30,15 +30,15 @@ public:
 		float DistanceWithPlayer;
 
 	bool isBallCloseEnough();
-	class ASwitchBall_UE5Character* getPlayerOverlapped();
-	class ASwitchBallBase* getBallOverlapped();
+	TObjectPtr<class ASwitchBall_UE5Character> getPlayerOverlapped();
+	TObjectPtr<class ASwitchBallBase> getBallOverlapped();
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
-	class ASwitchBallBase* ballOverlapped;
-	class ASwitchBall_UE5Character* characterOverlapped;
+	TObjectPtr<class ASwitchBallBase> ballOverlapped;
+	TObjectPtr<class ASwitchBall_UE5Character> characterOverlapped;
 	FVector DefaultLocation;
 public:	
 	// Called every frame

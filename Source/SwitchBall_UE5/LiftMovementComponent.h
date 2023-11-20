@@ -38,7 +38,7 @@ public:
 private:
 	FVector defaultLocation;
 	FVector targetLocation;
-	AActor* owner;
+	TObjectPtr<AActor> owner;
 	bool shouldReturn;
 	bool wait;
 	float secPassed;

@@ -25,7 +25,7 @@ public:
 
 private:
 	UPROPERTY()
-		USwitchBallWidget* sbWidget;
+		TObjectPtr<USwitchBallWidget> sbWidget;
 
 protected:
 	virtual void BeginPlay();

@@ -17,7 +17,7 @@ public:
 	ALaunchTriggerBox();
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Launcher")
-		class APointLight* PointLight;
+		TObjectPtr<class APointLight> PointLight;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Launcher")
 		float period;
@@ -35,5 +35,5 @@ protected:
 	void Launch();
 	void Idle();
 
-	class ASwitchBallBase* ballOverlapped;
+	TObjectPtr<class ASwitchBallBase> ballOverlapped;
 };

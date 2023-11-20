@@ -19,15 +19,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	UPROPERTY(EditAnywhere)
-		UStaticMeshComponent* staticMesh;
+		TObjectPtr<UStaticMeshComponent> staticMesh;
 
 	FVector playerStartLocation;
 
 	UPROPERTY(VisibleDefaultsOnly, Category = Movement)
-		UMaterialInstanceDynamic* materialInstance;
+		TObjectPtr<UMaterialInstanceDynamic> materialInstance;
 
 	UPROPERTY()
-		USoundWave* TeleportationSound;
+		TObjectPtr<USoundWave> TeleportationSound;
 
 	UFUNCTION()
 		void NotifyHit(

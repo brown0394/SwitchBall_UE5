@@ -27,13 +27,13 @@ public:
 	void SetSwitchBallTextVisibility(bool on, ballType type);
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-		class UProgressBar* ChargeBar;
+		TObjectPtr<class UProgressBar> ChargeBar;
 
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-		class UTextBlock* SwitchBallText;
+		TObjectPtr<class UTextBlock> SwitchBallText;
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-		class UTextBlock* StickyBallText;
+		TObjectPtr<class UTextBlock> StickyBallText;
 	UPROPERTY(EditAnywhere, meta = (BindWidget))
-		class UTextBlock* EyeBallText;
+		TObjectPtr<class UTextBlock> EyeBallText;
 };
 

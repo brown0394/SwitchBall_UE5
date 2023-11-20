@@ -6,7 +6,7 @@
 
 
 EBTNodeResult::Type UBTTask_GoToDefaultLoc::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) {
-	APusherAIController* pusherController = Cast<APusherAIController>(OwnerComp.GetAIOwner());
+	TObjectPtr<APusherAIController> pusherController = Cast<APusherAIController>(OwnerComp.GetAIOwner());
 	UBlackboardComponent* blackBoard = OwnerComp.GetBlackboardComponent();
 	//ASwitchBallBase* ball = Cast<ASwitchBallBase>(blackBoard->GetValue<UBlackboardKeyType_Object>(pusherController->TargetKeyID));
 	if (pusherController) {

@@ -15,9 +15,9 @@ public:
 	// Sets default values for this actor's properties
 	ASwitchBallBase();
 	UPROPERTY()
-		UStaticMeshComponent* staticMesh;
+		TObjectPtr<UStaticMeshComponent> staticMesh;
 	UPROPERTY(EditAnywhere)
-		class USphereComponent* collisionComponent;
+		TObjectPtr<class USphereComponent> collisionComponent;
 
 	UPROPERTY(EditAnywhere)
 		FVector defaultLocation;
@@ -45,7 +45,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY()
-		USoundWave* HitSound;
+		TObjectPtr<USoundWave> HitSound;
 
 public:	
 	// Called every frame

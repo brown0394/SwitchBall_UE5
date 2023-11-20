@@ -262,7 +262,7 @@ void ASwitchBall_UE5Character::ChangeToEyeBall() {
 	}
 }
 
-ASwitchBallBase* ASwitchBall_UE5Character::getBallLaunched() {
+TObjectPtr<ASwitchBallBase> ASwitchBall_UE5Character::getBallLaunched() {
 	if (canLaunchBall) return nullptr;
 	return switchBalls[currentBall];
 }

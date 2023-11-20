@@ -28,7 +28,7 @@ void USwitchBallWidget::SetChargeBarVisibility(bool on) {
 	}
 }
 void USwitchBallWidget::SetSwitchBallTextVisibility(bool on, ballType type) {
-	UTextBlock* textBlock = nullptr;
+	TObjectPtr<UTextBlock> textBlock = nullptr;
 	switch (type) {
 	case SWITCHBALL: {textBlock = SwitchBallText; break; }
 	case STICKYBALL: {textBlock = StickyBallText; break; }

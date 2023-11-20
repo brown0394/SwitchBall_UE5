@@ -18,11 +18,11 @@ private:
 	virtual void EnableBall() override;
 	virtual void DisableBall() override;
 	UPROPERTY()
-		class ASwitchBallPlayerController* playerController;
+		TObjectPtr<class ASwitchBallPlayerController> playerController;
 	UPROPERTY()
-		class ASwitchBall_UE5Character* PlayerCharacter;
+		TObjectPtr<class ASwitchBall_UE5Character> PlayerCharacter;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-		class UCameraComponent* FollowCamera;
+		TObjectPtr<class UCameraComponent> FollowCamera;
 
 public:
 	AEyeBall();

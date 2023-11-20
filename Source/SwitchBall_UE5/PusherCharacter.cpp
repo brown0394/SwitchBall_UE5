@@ -51,7 +51,6 @@ void APusherCharacter::NotifyActorBeginOverlap(AActor* OtherActor)
 	else {
 		ASwitchBall_UE5Character* character = Cast<ASwitchBall_UE5Character>(OtherActor);
 		if (character) {
-			GEngine->AddOnScreenDebugMessage(-1, 2, FColor::Green, TEXT("character overlapped"));
 			characterOverlapped = character;
 		}
 	}
@@ -71,7 +70,7 @@ void APusherCharacter::NotifyActorEndOverlap(AActor* OtherActor)
 	}
 }
 
-ASwitchBallBase* APusherCharacter::getBallOverlapped() {
+TObjectPtr<ASwitchBallBase> APusherCharacter::getBallOverlapped() {
 	return ballOverlapped;
 }
 
@@ -84,7 +83,7 @@ bool APusherCharacter::isBallCloseEnough() {
 	return false;
 }
 
-ASwitchBall_UE5Character* APusherCharacter::getPlayerOverlapped() {
+TObjectPtr<ASwitchBall_UE5Character> APusherCharacter::getPlayerOverlapped() {
 	return characterOverlapped;
 }
 

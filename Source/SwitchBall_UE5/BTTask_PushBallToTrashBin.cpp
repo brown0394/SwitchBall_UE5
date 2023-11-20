@@ -6,7 +6,7 @@
 
 
 EBTNodeResult::Type UBTTask_PushBallToTrashBin::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) {
-	APusherAIController* pusherController = Cast<APusherAIController>(OwnerComp.GetAIOwner());
+	TObjectPtr<APusherAIController> pusherController = Cast<APusherAIController>(OwnerComp.GetAIOwner());
 	UBlackboardComponent* blackBoard = OwnerComp.GetBlackboardComponent();
 	if (pusherController) {
 		pusherController->MoveToActor(Cast<AActor>(blackBoard->GetValueAsObject("TrashBin")));

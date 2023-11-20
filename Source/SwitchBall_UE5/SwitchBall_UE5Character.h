@@ -15,45 +15,45 @@ class ASwitchBall_UE5Character : public ACharacter
 
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class USpringArmComponent* CameraBoom;
+		TObjectPtr<class USpringArmComponent> CameraBoom;
 
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
-	class UCameraComponent* FollowCamera;
+		TObjectPtr<class UCameraComponent> FollowCamera;
 	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputMappingContext* DefaultMappingContext;
+		TObjectPtr<class UInputMappingContext> DefaultMappingContext;
 
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* JumpAction;
+		TObjectPtr<class UInputAction> JumpAction;
 
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* MoveAction;
+		TObjectPtr<class UInputAction> MoveAction;
 
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* LookAction;
+		TObjectPtr<class UInputAction> LookAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		class UInputAction* SwitchAction;
+		TObjectPtr<class UInputAction> SwitchAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		class UInputAction* ClickAction;
+		TObjectPtr<class UInputAction> ClickAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		class UInputAction* ChangeToSwitchBallAction;
+		TObjectPtr<class UInputAction> ChangeToSwitchBallAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		class UInputAction* ChangeToStickyBallAction;
+		TObjectPtr<class UInputAction> ChangeToStickyBallAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-		class UInputAction* ChangeToEyeBallAction;
+		TObjectPtr<class UInputAction> ChangeToEyeBallAction;
 
 public:
 	ASwitchBall_UE5Character();
-	class ASwitchBallBase* getBallLaunched();
+	TObjectPtr<class ASwitchBallBase> getBallLaunched();
 
 protected:
 
@@ -101,12 +101,12 @@ public:
 
 private:
 	UPROPERTY()
-	class ASwitchBallPlayerController* switchBallPlayerController;
+	TObjectPtr<class ASwitchBallPlayerController> switchBallPlayerController;
 	float impulseToLaunch;
 	bool shouldChargeIncrease;
 
 	UPROPERTY()
-	TArray<class ASwitchBallBase*> switchBalls;
+	TArray<TObjectPtr<class ASwitchBallBase>> switchBalls;
 	int currentBall;
 	bool canLaunchBall;
 	UPROPERTY()
@@ -116,12 +116,12 @@ private:
 		FTimerHandle SwitchTimeHandle;
 
 	UPROPERTY()
-	USoundWave* TeleportationSound;
+		TObjectPtr<USoundWave> TeleportationSound;
 	UPROPERTY()
-	USoundWave* SelectionSound;
+		TObjectPtr<USoundWave> SelectionSound;
 
 	UPROPERTY()
-	USoundWave* LaunchSound;
+		TObjectPtr<USoundWave> LaunchSound;
 
 	void playTeleportSound();
 };
