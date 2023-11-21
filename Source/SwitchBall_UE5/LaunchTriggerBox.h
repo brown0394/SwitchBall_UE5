@@ -31,7 +31,7 @@ protected:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor);
 	virtual void NotifyActorEndOverlap(AActor* OtherActor);
 	virtual void BeginPlay() override;
-
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 	void Launch();
 	void Idle();
 

@@ -18,6 +18,7 @@ ULiftMovementComponent::ULiftMovementComponent()
 	secPassed = 0.0f;
 	timeToReachDest = 1.0f;
 	alphaStep = 0.1f;
+	secToWait = 0.0f;
 	// ...
 }
 
@@ -36,37 +37,48 @@ void ULiftMovementComponent::BeginPlay()
 	alphaStep = 1 / timeToReachDest;
 }
 
-
 // Called every frame
 void ULiftMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	secPassed += DeltaTime;
-	if (wait) {
-		if (secPassed > secToWait) {
-			wait = false;
-			secPassed = 0;
-		}
-	}
-	else {
-		if (shouldReturn) {
-			FVector newLoc = FMath::Lerp(targetLocation, defaultLocation, secPassed * alphaStep);
-			owner->SetActorLocation(newLoc);
-			if (secPassed * alphaStep >= 1) {
-				shouldReturn = false;
+	if (timeToReachDest) {
+		secPassed += DeltaTime;
+		if (wait) {
+			if (secPassed > secToWait) {
+				wait = false;
 				secPassed = 0;
-				wait = true;
 			}
 		}
 		else {
-			owner->SetActorLocation(FMath::Lerp(defaultLocation, targetLocation, secPassed * alphaStep));
-			if (secPassed * alphaStep >= 1) {
-				shouldReturn = true;
-				secPassed = 0;
-				wait = true;
+			if (shouldReturn) {
+				FVector newLoc = FMath::Lerp(targetLocation, defaultLocation, secPassed * alphaStep);
+				owner->SetActorLocation(newLoc);
+				if (secPassed * alphaStep >= 1) {
+					shouldReturn = false;
+					secPassed = 0;
+					wait = true;
+				}
+			}
+			else {
+				owner->SetActorLocation(FMath::Lerp(defaultLocation, targetLocation, secPassed * alphaStep));
+				if (secPassed * alphaStep >= 1) {
+					shouldReturn = true;
+					secPassed = 0;
+					wait = true;
+				}
 			}
 		}
 	}
+
 	// ...
 }
 
+void ULiftMovementComponent::SetDestination(float x, float y, float z, float timeToReach, float sec) {
+	xDistance = x;
+	yDistance = y;
+	zDistance = z;
+	timeToReachDest = timeToReach;
+	secToWait = sec;
+
+	alphaStep = 1 / timeToReachDest;
+}

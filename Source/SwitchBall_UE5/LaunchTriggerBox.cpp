@@ -17,6 +17,11 @@ void ALaunchTriggerBox::BeginPlay()
 	Idle();
 }
 
+void ALaunchTriggerBox::EndPlay(const EEndPlayReason::Type EndPlayReason) {
+	Super::EndPlay(EndPlayReason);
+	GetWorld()->GetTimerManager().ClearTimer(timeHandle);
+}
+
 void ALaunchTriggerBox::NotifyActorBeginOverlap(AActor* OtherActor)
 {
 	TObjectPtr<ASwitchBallBase> ball = Cast<ASwitchBallBase>(OtherActor);
