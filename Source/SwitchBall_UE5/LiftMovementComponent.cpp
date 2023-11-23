@@ -14,7 +14,7 @@ ULiftMovementComponent::ULiftMovementComponent()
 	yDistance = 0.0f;
 	zDistance = 0.0f;
 	shouldReturn = false;
-	wait = true;
+	wait = false;
 	secPassed = 0.0f;
 	timeToReachDest = 1.0f;
 	alphaStep = 0.1f;
@@ -44,7 +44,12 @@ void ULiftMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	if (timeToReachDest) {
 		secPassed += DeltaTime;
 		if (wait) {
-			if (secPassed > secToWait) {
+			if (secToWait < 0) {
+				secPassed = 0;
+				wait = false;
+				timeToReachDest = 0;
+			}
+			else if (secPassed > secToWait) {
 				wait = false;
 				secPassed = 0;
 			}
@@ -74,11 +79,9 @@ void ULiftMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 }
 
 void ULiftMovementComponent::SetDestination(float x, float y, float z, float timeToReach, float sec) {
-	xDistance = x;
-	yDistance = y;
-	zDistance = z;
 	timeToReachDest = timeToReach;
 	secToWait = sec;
-
 	alphaStep = 1 / timeToReachDest;
+	defaultLocation = owner->GetActorLocation();
+	targetLocation = owner->ActorToWorld().TransformPositionNoScale(FVector(x, y, z));
 }
