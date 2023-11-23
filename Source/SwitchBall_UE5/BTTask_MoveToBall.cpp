@@ -1,14 +1,14 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "MyBTTask_MoveToBall.h"
+#include "BTTask_MoveToBall.h"
 #include "PusherCharacter.h"
 #include "PusherAIController.h"
 #include "SwitchBallBase.h"
 //#include "BehaviorTree/Blackboard/BlackboardKeyType_Object.h"
 
 
-EBTNodeResult::Type UMyBTTask_MoveToBall::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) {
+EBTNodeResult::Type UBTTask_MoveToBall::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) {
 	APusherAIController* pusherController = Cast<APusherAIController>(OwnerComp.GetAIOwner());
 	APusherCharacter* pusherCharacter = Cast<APusherCharacter>(pusherController->GetCharacter());
 	//UBlackboardComponent* blackBoard = OwnerComp.GetBlackboardComponent();

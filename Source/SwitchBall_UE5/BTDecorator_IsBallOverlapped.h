@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "BehaviorTree/BTDecorator.h"
-#include "MyBTDecorator_IsBallOverlapped.generated.h"
+#include "BehaviorTree/Decorators/BTDecorator_BlackboardBase.h"
+#include "BTDecorator_IsBallOverlapped.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class SWITCHBALL_UE5_API UMyBTDecorator_IsBallOverlapped : public UBTDecorator
+class SWITCHBALL_UE5_API UBTDecorator_IsBallOverlapped : public UBTDecorator_BlackboardBase
 {
 	GENERATED_BODY()
 protected:
